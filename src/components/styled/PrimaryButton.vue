@@ -1,0 +1,13 @@
+<script setup lang="ts">
+import { Button } from '@/components/ui/button'
+</script>
+
+<template>
+  <Button class="primary-button">Styled Button</Button>
+</template>
+
+<style scoped>
+.primary-button {
+  background-color: blue;
+}
+</style>
