@@ -10,7 +10,8 @@ module.exports = {
     'plugin:vue/vue3-strongly-recommended',
     '@vue/eslint-config-typescript',
     '@vue/eslint-config-prettier/skip-formatting',
-    'plugin:prettier/recommended'
+    'plugin:prettier/recommended',
+    'plugin:tailwindcss/recommended'
   ],
   overrides: [
     {

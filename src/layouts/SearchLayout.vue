@@ -1,10 +1,13 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div>Search Layout</div>
+  <header>
+    <nav class="flex flex-row justify-center gap-4">
+      <RouterLink to="/pokemon">Pokemon</RouterLink>
+      <RouterLink to="/movement">Pokemon -> Movement</RouterLink>
+    </nav>
+  </header>
   <main>
     <slot />
   </main>
 </template>
-
-<style scoped></style>

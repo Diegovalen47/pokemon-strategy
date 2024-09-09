@@ -1,8 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div>Basic Layout</div>
-  <main>
+  <main class="h-dvh w-screen p-3">
     <slot />
   </main>
 </template>
