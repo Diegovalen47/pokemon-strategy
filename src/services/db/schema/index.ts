@@ -1,0 +1,7 @@
+export * from './pokemon'
+export * from './type'
+export * from './ability'
+export * from './origin-type'
+export * from './origin-ability'
+export * from './damage-relation'
+export * from './movement'

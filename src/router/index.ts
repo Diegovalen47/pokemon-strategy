@@ -1,25 +1,31 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {
+  createRouter as _createRouter,
+  createMemoryHistory,
+  createWebHistory
+} from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import PokemonView from '../views/PokemonView.vue'
+import MovementPokemonView from '../views/MovementPokemonView.vue'
 
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/pokemon',
-      name: 'pokemon',
-      component: () => import('../views/PokemonView.vue')
-    },
-    {
-      path: '/movement',
-      name: 'movement',
-      component: () => import('../views/MovementPokemonView.vue')
-    }
-  ]
-})
-
-export default router
+export function createRouter() {
+  return _createRouter({
+    history: import.meta.env.SSR ? createMemoryHistory() : createWebHistory(),
+    routes: [
+      {
+        path: '/',
+        name: 'home',
+        component: HomeView
+      },
+      {
+        path: '/pokemon',
+        name: 'pokemon',
+        component: PokemonView
+      },
+      {
+        path: '/movement',
+        name: 'movement',
+        component: MovementPokemonView
+      }
+    ]
+  })
+}
