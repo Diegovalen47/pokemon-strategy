@@ -1,1 +1,1 @@
-export * from './local-database-service'
+export * from './client-db-service'

@@ -40,6 +40,5 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['sqlocal']
-  },
-  assetsInclude: ['./src/drizzle/**']
+  }
 })

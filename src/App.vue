@@ -1,20 +1,23 @@
 <script setup lang="ts">
-import { onMounted, ref, shallowRef } from 'vue'
+import { shallowRef } from 'vue'
 import { RouterView } from 'vue-router'
 import BasicLayout from '@/layouts/BasicLayout.vue'
 import ThemeToggle from '@/components/shared/ThemeToggle.vue'
+import { ClientDbService } from './services/db'
+import { OrmService } from './services/db/orm-service'
 
 const layout = shallowRef(BasicLayout)
-const isMounted = ref(false)
 
-onMounted(() => {
-  // Prevents hydration warnings for now
-  isMounted.value = true
-})
+const DBService = new ClientDbService()
+await DBService.connect()
+const ormService = new OrmService(DBService.getOrm())
+
+const pokemones = await ormService.getAllPokemon()
+console.log(pokemones)
 </script>
 
 <template>
-  <div v-if="isMounted">
+  <div>
     <component :is="layout">
       <RouterView @update:layout="layout = $event" />
     </component>

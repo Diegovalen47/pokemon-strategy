@@ -1,24 +1,14 @@
-import { createSSRApp } from 'vue'
+import './assets/index.css'
+
+import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
-import { createRouter } from './router'
 import App from './App.vue'
+import router from './router'
 
-export const createApp = () => {
-  /**
-   * use createSSRApp to render the Vue App on the server
-   * and send it to the user to do the hydration process
-   */
-  const app = createSSRApp(App)
-  const router = createRouter()
-  const pinia = createPinia()
+const app = createApp(App)
 
-  app.use(router)
-  app.use(pinia)
+app.use(createPinia())
+app.use(router)
 
-  return {
-    app,
-    router,
-    pinia
-  }
-}
+app.mount('#app')
