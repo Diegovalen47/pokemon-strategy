@@ -3,21 +3,18 @@ import { shallowRef } from 'vue'
 import { RouterView } from 'vue-router'
 import BasicLayout from '@/layouts/BasicLayout.vue'
 import ThemeToggle from '@/components/shared/ThemeToggle.vue'
-import { ClientDbService } from './services/db'
-import { OrmService } from './services/db/orm-service'
+
+import { useStoregeStore } from './stores/storage'
+
+const storageStore = useStoregeStore()
 
 const layout = shallowRef(BasicLayout)
 
-const DBService = new ClientDbService()
-await DBService.connect()
-const ormService = new OrmService(DBService.getOrm())
-
-const pokemones = await ormService.getAllPokemon()
-console.log(pokemones)
+storageStore.initialize()
 </script>
 
 <template>
-  <div>
+  <div v-if="!storageStore.isLoading">
     <component :is="layout">
       <RouterView @update:layout="layout = $event" />
     </component>
@@ -25,6 +22,7 @@ console.log(pokemones)
       <ThemeToggle />
     </div>
   </div>
+  <div v-else>...Loading</div>
 </template>
 
 <style scoped></style>

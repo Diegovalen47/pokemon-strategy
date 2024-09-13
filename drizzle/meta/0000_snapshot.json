@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "fbb33b17-ed89-4e84-8d4d-1c36aceb29e4",
+  "id": "b0472beb-5cb6-4f2a-83c0-d78d43763a2a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "POKEMON": {
@@ -36,13 +36,6 @@
             "name"
           ],
           "isUnique": true
-        },
-        "name_idx": {
-          "name": "name_idx",
-          "columns": [
-            "name"
-          ],
-          "isUnique": true
         }
       },
       "foreignKeys": {},
@@ -70,13 +63,6 @@
       "indexes": {
         "TYPE_name_unique": {
           "name": "TYPE_name_unique",
-          "columns": [
-            "name"
-          ],
-          "isUnique": true
-        },
-        "name_idx": {
-          "name": "name_idx",
           "columns": [
             "name"
           ],
@@ -119,13 +105,6 @@
             "name"
           ],
           "isUnique": true
-        },
-        "name_idx": {
-          "name": "name_idx",
-          "columns": [
-            "name"
-          ],
-          "isUnique": true
         }
       },
       "foreignKeys": {},
@@ -142,8 +121,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "ability_id": {
-          "name": "ability_id",
+        "type_id": {
+          "name": "type_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -165,9 +144,67 @@
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
-        "ORIGIN_TYPE_ability_id_ABILITY_id_fk": {
-          "name": "ORIGIN_TYPE_ability_id_ABILITY_id_fk",
+        "ORIGIN_TYPE_type_id_TYPE_id_fk": {
+          "name": "ORIGIN_TYPE_type_id_TYPE_id_fk",
           "tableFrom": "ORIGIN_TYPE",
+          "tableTo": "TYPE",
+          "columnsFrom": [
+            "type_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {
+        "ORIGIN_TYPE_pokemon_id_type_id_pk": {
+          "columns": [
+            "pokemon_id",
+            "type_id"
+          ],
+          "name": "ORIGIN_TYPE_pokemon_id_type_id_pk"
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "ORIGIN_ABILITY": {
+      "name": "ORIGIN_ABILITY",
+      "columns": {
+        "pokemon_id": {
+          "name": "pokemon_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ability_id": {
+          "name": "ability_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ORIGIN_ABILITY_pokemon_id_POKEMON_id_fk": {
+          "name": "ORIGIN_ABILITY_pokemon_id_POKEMON_id_fk",
+          "tableFrom": "ORIGIN_ABILITY",
+          "tableTo": "POKEMON",
+          "columnsFrom": [
+            "pokemon_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        },
+        "ORIGIN_ABILITY_ability_id_ABILITY_id_fk": {
+          "name": "ORIGIN_ABILITY_ability_id_ABILITY_id_fk",
+          "tableFrom": "ORIGIN_ABILITY",
           "tableTo": "ABILITY",
           "columnsFrom": [
             "ability_id"
@@ -180,12 +217,12 @@
         }
       },
       "compositePrimaryKeys": {
-        "ORIGIN_TYPE_pokemon_id_ability_id_pk": {
+        "ORIGIN_ABILITY_pokemon_id_ability_id_pk": {
           "columns": [
             "pokemon_id",
             "ability_id"
           ],
-          "name": "ORIGIN_TYPE_pokemon_id_ability_id_pk"
+          "name": "ORIGIN_ABILITY_pokemon_id_ability_id_pk"
         }
       },
       "uniqueConstraints": {}
@@ -283,13 +320,6 @@
       "indexes": {
         "MOVEMENT_name_unique": {
           "name": "MOVEMENT_name_unique",
-          "columns": [
-            "name"
-          ],
-          "isUnique": true
-        },
-        "name_idx": {
-          "name": "name_idx",
           "columns": [
             "name"
           ],

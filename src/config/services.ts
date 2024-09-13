@@ -1,1 +1,1 @@
-export const LOCAL_DATABASE_SERVICE = 'db-service'
+export const CLIENTE_DB_SERVICE_INJECT_TOKEN = 'db-service'

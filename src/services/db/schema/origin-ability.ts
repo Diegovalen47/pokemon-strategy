@@ -3,7 +3,7 @@ import { pokemon } from './pokemon'
 import { ability } from './ability'
 
 export const originAbility = sqliteTable(
-  'ORIGIN_TYPE',
+  'ORIGIN_ABILITY',
   {
     pokemonId: integer('pokemon_id')
       .notNull()

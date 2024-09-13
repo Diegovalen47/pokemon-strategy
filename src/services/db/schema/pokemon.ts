@@ -1,22 +1,9 @@
-import {
-  sqliteTable,
-  integer,
-  text,
-  uniqueIndex
-} from 'drizzle-orm/sqlite-core'
+import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core'
 
-export const pokemon = sqliteTable(
-  'POKEMON',
-  {
-    id: integer('id').primaryKey(),
-    name: text('name').notNull().unique(),
-    sprite: text('sprite')
-  },
-  (table) => {
-    return {
-      nameIdx: uniqueIndex('name_idx').on(table.name)
-    }
-  }
-)
+export const pokemon = sqliteTable('POKEMON', {
+  id: integer('id').primaryKey(),
+  name: text('name').notNull().unique(),
+  sprite: text('sprite')
+})
 
 export type Pokemon = typeof pokemon.$inferSelect

@@ -1,7 +1,11 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
 import { type } from './type'
 
-type Relation = 'double_damage' | 'half_damage' | 'no_damage' | 'normal_damage'
+export type Relation =
+  | 'double_damage'
+  | 'half_damage'
+  | 'no_damage'
+  | 'normal_damage'
 
 export const damageRelation = sqliteTable('DAMAGE_RELATION', {
   id: integer('id').primaryKey({ autoIncrement: true }),
