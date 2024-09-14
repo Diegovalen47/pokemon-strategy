@@ -1,7 +1,7 @@
 import { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
 import { pokemon } from './schema'
 import type Pokemon from '@/models/pokemon'
-import { count } from 'drizzle-orm'
+import { count, ilike } from 'drizzle-orm'
 import { CustomGeneralError, NotConnected } from '../errors/db'
 
 export class OrmService {
@@ -15,6 +15,25 @@ export class OrmService {
 
     try {
       return (await this.orm.select({ value: count() }).from(pokemon))[0].value
+    } catch (error) {
+      console.error('Error al obtener todos los pokemon', error)
+      return new CustomGeneralError('Error al contar los pokemon')
+    }
+  }
+
+  async searchPokemonByLikeName(query: string): Promise<Pokemon[] | Error> {
+    if (this.orm === null) {
+      console.error('No está conectado a la base de datos local')
+      return new NotConnected()
+    }
+
+    try {
+      const pokemonList = await this.orm
+        .select()
+        .from(pokemon)
+        .where(ilike(pokemon.name, `${query}%`))
+        .orderBy(pokemon.id)
+      return pokemonList
     } catch (error) {
       console.error('Error al obtener todos los pokemon', error)
       return new CustomGeneralError('Error al contar los pokemon')

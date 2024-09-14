@@ -4,17 +4,11 @@ import { RouterView } from 'vue-router'
 import BasicLayout from '@/layouts/BasicLayout.vue'
 import ThemeToggle from '@/components/shared/ThemeToggle.vue'
 
-import { useStoregeStore } from './stores/storage'
-
-const storageStore = useStoregeStore()
-
 const layout = shallowRef(BasicLayout)
-
-storageStore.initialize()
 </script>
 
 <template>
-  <div v-if="!storageStore.isLoading">
+  <div>
     <component :is="layout">
       <RouterView @update:layout="layout = $event" />
     </component>
@@ -22,7 +16,6 @@ storageStore.initialize()
       <ThemeToggle />
     </div>
   </div>
-  <div v-else>...Loading</div>
 </template>
 
 <style scoped></style>

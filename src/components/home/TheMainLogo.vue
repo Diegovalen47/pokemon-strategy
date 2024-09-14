@@ -3,7 +3,7 @@ import { AspectRatio } from '@/components/ui/aspect-ratio'
 </script>
 
 <template>
-  <div class="sm:w-52 md:w-[600px]">
+  <div class="w-24 sm:w-32 md:w-[600px]">
     <AspectRatio>
       <img
         src="/src/assets/img/pokemon_strategy_logo.png"

@@ -44,9 +44,7 @@ export const useStoregeStore = defineStore('storage', () => {
     }
 
     try {
-      await pokeApiService.value.getAllPokemonAndSaveInDb(
-        dbOrm.value.insertPokemon
-      )
+      await pokeApiService.value.getAllPokemonAndSaveInDb()
     } catch (error) {
       console.error('Error al obtener y guardar los pokemon', error)
     }
@@ -67,5 +65,9 @@ export const useStoregeStore = defineStore('storage', () => {
 
   const initialize = () => refetch()
 
-  return { isLoading, isError, error, initialize }
+  const searchForPokemon = async (query: string) => {
+    return await dbOrm.value?.searchPokemonByLikeName(query)
+  }
+
+  return { isLoading, isError, error, initialize, searchForPokemon }
 })
