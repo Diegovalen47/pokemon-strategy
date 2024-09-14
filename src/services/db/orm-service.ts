@@ -1,10 +1,11 @@
 import { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
 import { pokemon } from './schema'
+import type Pokemon from '@/models/pokemon'
 import { count } from 'drizzle-orm'
 import { CustomGeneralError, NotConnected } from '../errors/db'
 
 export class OrmService {
-  constructor(private orm: SqliteRemoteDatabase) {}
+  constructor(public orm: SqliteRemoteDatabase) {}
 
   async getPokemonCount(): Promise<number | Error> {
     if (this.orm === null) {
@@ -20,17 +21,18 @@ export class OrmService {
     }
   }
 
-  async insertPokemon(pokemonData: {
-    id: number
-    name: string
-    sprite: string
-  }) {
+  async insertPokemon(pokemonData: Pokemon | Pokemon[]): Promise<void> {
     if (this.orm === null) {
       console.error('No está conectado a la base de datos local')
       return
     }
 
     try {
+      if (Array.isArray(pokemonData)) {
+        await this.orm.insert(pokemon).values(pokemonData)
+        console.log('Lista Pokemon insertado')
+        return
+      }
       await this.orm.insert(pokemon).values(pokemonData)
       console.log('Pokemon insertado')
     } catch (error) {

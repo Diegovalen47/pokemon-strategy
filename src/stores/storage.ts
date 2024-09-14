@@ -7,10 +7,6 @@ import { PokeApiService } from '@/services/poke_api'
 import { OrmService } from '@/services/db/orm-service'
 
 export const useStoregeStore = defineStore('storage', () => {
-  const clientDbService = ref<ClientDbService>(new ClientDbService())
-  const pokeApiService = ref<PokeApiService>(new PokeApiService())
-  const dbOrm = ref<OrmService | null>(null)
-
   const { isLoading, isError, error, refetch } = useQuery({
     queryKey: ['initializePokemonData'],
     queryFn: async () => {
@@ -20,9 +16,18 @@ export const useStoregeStore = defineStore('storage', () => {
     enabled: false
   })
 
+  const clientDbService = ref<ClientDbService | null>(null)
+  const pokeApiService = ref<PokeApiService | null>()
+  const dbOrm = ref<OrmService | null>(null)
+
   const initializePokemonData = async (): Promise<void> => {
-    await clientDbService.value.connect()
+    clientDbService.value = new ClientDbService()
+    await clientDbService.value?.connect()
+
     dbOrm.value = new OrmService(clientDbService.value.getOrm())
+    pokeApiService.value = new PokeApiService(
+      new OrmService(clientDbService.value.getOrm())
+    )
 
     const response = await clientDbService.value.createTables()
 
@@ -38,12 +43,17 @@ export const useStoregeStore = defineStore('storage', () => {
       return
     }
 
-    const pokemonRemoteData = await lookForPokemonRemoteData()
-    insertPokemonDataInDb(pokemonRemoteData)
+    try {
+      await pokeApiService.value.getAllPokemonAndSaveInDb(
+        dbOrm.value.insertPokemon
+      )
+    } catch (error) {
+      console.error('Error al obtener y guardar los pokemon', error)
+    }
   }
 
   const pokemonQuantityHasChanged = async () => {
-    const pokemonCountRemote = await pokeApiService.value.getPokemonCount()
+    const pokemonCountRemote = await pokeApiService.value?.getPokemonCount()
     const pokemonCountLocal = await dbOrm.value?.getPokemonCount()
     console.log('pokemonCountRemote', pokemonCountRemote)
     console.log('pokemonCountLocal', pokemonCountLocal)
@@ -53,15 +63,6 @@ export const useStoregeStore = defineStore('storage', () => {
     }
 
     return true
-  }
-
-  const lookForPokemonRemoteData = async () => {
-    const pokemons = await pokeApiService.value.getAllPokemon()
-    return pokemons
-  }
-
-  const insertPokemonDataInDb = (pokemonRemoteData: any) => {
-    console.log(pokemonRemoteData)
   }
 
   const initialize = () => refetch()
