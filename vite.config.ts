@@ -13,7 +13,6 @@ export default defineConfig({
       plugins: [tailwind(), autoprefixer()]
     }
   },
-  base: '/pokemon-strategy/',
   plugins: [
     vue(),
     {
