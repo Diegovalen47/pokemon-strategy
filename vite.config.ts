@@ -5,6 +5,7 @@ import autoprefixer from 'autoprefixer'
 import tailwind from 'tailwindcss'
 import { defineConfig } from 'vite'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -30,6 +31,14 @@ export default defineConfig({
         fs: 'memfs'
       },
       protocolImports: true
+    }),
+    viteStaticCopy({
+      targets: [
+        {
+          src: '_headers',
+          dest: '.'
+        }
+      ]
     })
   ],
   resolve: {
