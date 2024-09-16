@@ -38,7 +38,7 @@ const onInput = async (query: string) => {
             class="flex size-full items-center justify-center"
           >
             <span class="w-60 text-sm text-gray-400">
-              Buscar cualquier pokemon para obtener una estragegia contra este
+              Buscar cualquier pokemon para obtener una estrategia contra este
             </span>
           </div>
           <div v-else class="flex size-full items-center justify-center">

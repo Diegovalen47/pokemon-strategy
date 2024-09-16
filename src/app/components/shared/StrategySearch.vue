@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
+import { Loader2 } from 'lucide-vue-next'
 import { computed } from 'vue'
 
 import StrategySearchPokemonInput from './StrategySearchPokemonInput.vue'
 
+import { Button } from '@/app/components/ui/button'
 import { Skeleton } from '@/app/components/ui/skeleton'
 import {
   Tabs,
@@ -37,26 +39,43 @@ const ormService = computed(
       </TabsList>
       <TabsContent
         value="pokemon"
-        class="mt-0 rounded-2xl rounded-t-none border-4 border-t-0 p-2"
+        class="mt-0 rounded-2xl rounded-t-none border-4 p-2 data-[state=active]:rounded-se-2xl"
       >
-        <div v-if="error">
-          <p class="text-red-500">{{ error.message }}</p>
-          <button type="button" @click="globalStore.initialize()">
-            Recargar
-          </button>
+        <!-- <div v-if="error"> -->
+        <div v-if="error" class="flex flex-col items-center justify-center">
+          <p class="text-red-500">{{ 'Error al cargar los datos' }}</p>
+          <Button
+            variant="ghost"
+            :disabled="isLoading"
+            @click="globalStore.initialize()"
+          >
+            <Loader2 v-if="isLoading" class="size-4 animate-spin" />
+            <span v-else> Recargar </span>
+          </Button>
         </div>
         <div v-else-if="isLoading" class="flex flex-col space-y-3">
-          <Skeleton class="h-[125px] w-[250px] rounded-xl" />
+          <div
+            class="flex h-[40px] w-full items-center justify-center gap-2 rounded-xl"
+          >
+            <Loader2 class="size-4 animate-spin" />
+            <span class="text-lg">Cargando datos...</span>
+          </div>
           <div class="space-y-2">
-            <Skeleton class="h-4 w-[250px]" />
-            <Skeleton class="h-4 w-[200px]" />
+            <Skeleton class="h-4 w-full" />
+            <Skeleton class="h-4 w-full" />
+            <Skeleton class="h-4 w-full" />
+            <Skeleton class="h-4 w-full" />
+            <Skeleton class="h-4 w-full" />
+            <Skeleton class="h-4 w-full" />
+            <Skeleton class="h-4 w-full" />
+            <Skeleton class="h-4 w-full" />
           </div>
         </div>
-        <StrategySearchPokemonInput v-if="data" :orm-service="ormService" />
+        <StrategySearchPokemonInput v-else :orm-service="ormService" />
       </TabsContent>
       <TabsContent
         value="movement"
-        class="mt-0 rounded-2xl rounded-t-none border-4 border-t-0 p-2"
+        class="mt-0 rounded-2xl rounded-t-none border-4 p-2 data-[state=active]:rounded-ss-2xl"
       >
         Movement -> Pokemon Input
       </TabsContent>
