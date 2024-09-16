@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 
-import type PokeApiRepository from './poke-api.repository'
+import { type PokeApiRepository } from './poke-api.repository'
 
 import { envs } from '@/config'
 import { CustomGeneralError } from '@/errors/db'

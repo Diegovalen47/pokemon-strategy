@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import type { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
+import { ref, watch } from 'vue'
 
 import {
   Command,
@@ -9,31 +10,37 @@ import {
   CommandList
 } from '@/app/components/ui/command'
 import { Input } from '@/app/components/ui/input'
-import { useGlobalStore } from '@/app/stores/global'
+import usePokemon from '@/app/composables/use-pokemon'
 import type { Pokemon } from '@/models/db'
 
-const globalStore = useGlobalStore()
-await globalStore.initialize()
+const props = defineProps<{
+  ormService: SqliteRemoteDatabase
+}>()
+
+const { pokemonOrmService } = usePokemon(props.ormService)
 
 const query = ref('')
 const pokemonList = ref<Pokemon[]>([])
 
-const searchPokemon = async (value: string) => {
-  if (!value || value === '') return
-  const result =
-    await globalStore.data?.ormService.searchPokemonByLikeName(value)
-  console.log(result)
-  return result
-}
-
 watch(query, async (value) => {
-  const result = await searchPokemon(value)
-  if (result instanceof Error) {
+  if (!value || value === '') {
+    pokemonList.value = []
     return
   }
-  if (result) {
-    pokemonList.value = result
+
+  const result = await pokemonOrmService.searchPokemonByLikeName(value)
+
+  if (result instanceof Error) {
+    pokemonList.value = []
+    return
   }
+
+  if (query.value === '') {
+    pokemonList.value = []
+    return
+  }
+
+  pokemonList.value = result
 })
 </script>
 
@@ -50,8 +57,6 @@ watch(query, async (value) => {
         >
           {{ pokemon.name }}
         </CommandItem>
-        <!-- <CommandItem value="search-emoji"> Search Emoji </CommandItem>
-        <CommandItem value="calculator"> Calculator </CommandItem> -->
       </CommandGroup>
     </CommandList>
   </Command>

@@ -1,11 +1,11 @@
-import type { OrmService } from '../db/orm.service'
+import type { PokemonOrmService } from '../orm/pokemon-orm.service'
 
-import type PokeApiRepository from '@/repositories/pokeapi/poke-api.repository'
+import { type PokeApiRepository } from '@/repositories/pokeapi'
 
 export class PokemonService {
   constructor(
     private pokeApiRepository: PokeApiRepository,
-    private ormService: OrmService
+    private ormService: PokemonOrmService
   ) {}
 
   async getAllPokemonAndSaveInDb(): Promise<void> {

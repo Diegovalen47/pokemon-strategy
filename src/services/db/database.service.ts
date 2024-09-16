@@ -20,11 +20,6 @@ export class DatabaseService {
   }
 
   public async deleteDatabase() {
-    if (this.client === null) {
-      console.error('No está conectado a la base de datos local')
-      return
-    }
-
     try {
       const rootDirectoryHandle = await navigator.storage.getDirectory()
       await rootDirectoryHandle.removeEntry(this.fileName)

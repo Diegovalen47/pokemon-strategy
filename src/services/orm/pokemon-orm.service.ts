@@ -6,7 +6,7 @@ import { CustomGeneralError } from '../../errors/db/db'
 import type Pokemon from '@/models/core/pokemon'
 import { pokemon } from '@/models/db'
 
-export class OrmService {
+export class PokemonOrmService {
   constructor(public orm: SqliteRemoteDatabase) {}
 
   async getPokemonCount(): Promise<number | Error> {

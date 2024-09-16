@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import type { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
+import { computed } from 'vue'
+
 import StrategySearchPokemonInput from './StrategySearchPokemonInput.vue'
 
 import { Skeleton } from '@/app/components/ui/skeleton'
@@ -8,7 +11,17 @@ import {
   TabsList,
   TabsTrigger
 } from '@/app/components/ui/tabs'
-// TODO: es neceario cachear todos los nombres de los pokemon, para poder darle autocompletado al input
+import { useGlobalStore } from '@/app/stores/global'
+
+const globalStore = useGlobalStore()
+globalStore.initialize()
+
+const isLoading = computed(() => globalStore.isLoading)
+const error = computed(() => globalStore.error)
+const data = computed(() => globalStore.data)
+const ormService = computed(
+  () => globalStore.data?.ormService as SqliteRemoteDatabase
+)
 </script>
 
 <template>
@@ -18,18 +31,20 @@ import {
       <TabsTrigger value="movement" class="w-1/2"> Movement </TabsTrigger>
     </TabsList>
     <TabsContent value="pokemon">
-      <Suspense>
-        <StrategySearchPokemonInput />
-        <template #fallback>
-          <div class="flex flex-col space-y-3">
-            <Skeleton class="h-[125px] w-[250px] rounded-xl" />
-            <div class="space-y-2">
-              <Skeleton class="h-4 w-[250px]" />
-              <Skeleton class="h-4 w-[200px]" />
-            </div>
-          </div>
-        </template>
-      </Suspense>
+      <div v-if="error">
+        <p class="text-red-500">{{ error.message }}</p>
+        <button type="button" @click="globalStore.initialize()">
+          Recargar
+        </button>
+      </div>
+      <div v-else-if="isLoading" class="flex flex-col space-y-3">
+        <Skeleton class="h-[125px] w-[250px] rounded-xl" />
+        <div class="space-y-2">
+          <Skeleton class="h-4 w-[250px]" />
+          <Skeleton class="h-4 w-[200px]" />
+        </div>
+      </div>
+      <StrategySearchPokemonInput v-if="data" :orm-service="ormService" />
     </TabsContent>
     <TabsContent value="movement"> Movement -> Pokemon Input </TabsContent>
   </Tabs>
