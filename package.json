@@ -12,7 +12,7 @@
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore --ignore-pattern /src/components/ui/* --ignore-pattern tailwind.config.js",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore --ignore-pattern /src/app/components/ui/* --ignore-pattern tailwind.config.js",
     "format": "prettier --write src/",
     "db:generate": "drizzle-kit generate"
   },
@@ -53,7 +53,9 @@
     "drizzle-kit": "^0.24.2",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-typescript": "^3.6.3",
     "eslint-plugin-cypress": "^3.3.0",
+    "eslint-plugin-import": "^2.30.0",
     "eslint-plugin-tailwindcss": "^3.17.4",
     "eslint-plugin-vue": "^9.23.0",
     "jsdom": "^24.1.0",

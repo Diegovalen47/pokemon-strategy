@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "b0472beb-5cb6-4f2a-83c0-d78d43763a2a",
+  "id": "4d199b2c-0f37-49a9-b763-be7bdf71798c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "POKEMON": {

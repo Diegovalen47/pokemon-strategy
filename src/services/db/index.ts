@@ -1,1 +1,2 @@
-export * from './client-db-service'
+export * from './database.service'
+export * from './orm.service'
