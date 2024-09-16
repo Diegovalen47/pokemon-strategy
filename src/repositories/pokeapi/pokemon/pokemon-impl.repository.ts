@@ -1,19 +1,17 @@
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 
-import { type PokeApiRepository } from './poke-api.repository'
+import { type PokemonRepository } from './pokemon.repository'
+import { pokeApi } from '../api'
 
-import { envs } from '@/config'
 import { CustomGeneralError } from '@/errors/db'
 import Pokemon from '@/models/core/pokemon'
 
-export class PokeApiImplRepository implements PokeApiRepository {
+export class PokemonRepositoryImpl implements PokemonRepository {
   private pokeApi: AxiosInstance
 
   constructor() {
-    this.pokeApi = axios.create({
-      baseURL: envs.VITE_POKE_API_URL
-    })
+    this.pokeApi = pokeApi
   }
 
   async getPokemonCount(): Promise<number> {

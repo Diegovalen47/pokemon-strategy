@@ -1,2 +1,2 @@
-export * from './poke-api-impl.repository'
-export * from './poke-api.repository'
+export * from './pokemon/pokemon-impl.repository'
+export * from './pokemon/pokemon.repository'

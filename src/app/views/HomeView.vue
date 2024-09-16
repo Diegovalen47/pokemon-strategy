@@ -15,8 +15,11 @@ emit('update:layout', BasicLayout)
     <div class="flex w-full items-center justify-center md:h-full md:w-5/12">
       <TheMainLogo />
     </div>
-    <div class="flex size-full justify-center md:w-5/12 md:items-center">
-      <StrategySearch />
+    <div
+      class="flex size-full justify-center md:w-5/12 md:flex-col md:items-center"
+    >
+      <div class="md:h-2/5"></div>
+      <StrategySearch class="h-3/5" />
     </div>
   </div>
 </template>

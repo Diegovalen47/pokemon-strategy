@@ -5,8 +5,8 @@ import { PokemonOrmService } from '../orm'
 
 import { ResourceAlreadyExists } from '@/errors/db'
 import {
-  PokeApiImplRepository,
-  type PokeApiRepository
+  PokemonRepositoryImpl,
+  type PokemonRepository
 } from '@/repositories/pokeapi'
 import { DatabaseService } from '@/services/db'
 import { PokemonService } from '@/services/pokemon'
@@ -31,10 +31,10 @@ export class InitializeDataService {
     }
 
     // Inicializacion de servicios
-    const pokeApiRepository = new PokeApiImplRepository()
+    const pokemonRepository = new PokemonRepositoryImpl()
     const pokemonOrmService = new PokemonOrmService(ormService)
     const pokemonService = new PokemonService(
-      pokeApiRepository,
+      pokemonRepository,
       pokemonOrmService
     )
 
@@ -44,7 +44,7 @@ export class InitializeDataService {
     if (tablesAlreadyExists) {
       console.log('Local database structure is up to date')
       const hasToReFetch = await this.hasToRefreshData(
-        pokeApiRepository,
+        pokemonRepository,
         pokemonOrmService
       )
       if (!hasToReFetch) {
@@ -65,10 +65,10 @@ export class InitializeDataService {
   }
 
   static async hasToRefreshData(
-    pokeApiRepository: PokeApiRepository,
+    pokemonRepository: PokemonRepository,
     pokemonOrmService: PokemonOrmService
   ) {
-    const pokemonCountRemote = await pokeApiRepository.getPokemonCount()
+    const pokemonCountRemote = await pokemonRepository.getPokemonCount()
     const pokemonCountLocal = await pokemonOrmService.getPokemonCount()
     console.log('pokemonCountRemote', pokemonCountRemote)
     console.log('pokemonCountLocal', pokemonCountLocal)

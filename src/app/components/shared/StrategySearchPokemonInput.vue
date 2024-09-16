@@ -1,63 +1,62 @@
 <script setup lang="ts">
 import type { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
-import { ref, watch } from 'vue'
 
 import {
   Command,
+  CommandInput,
   CommandEmpty,
   CommandGroup,
   CommandItem,
   CommandList
 } from '@/app/components/ui/command'
-import { Input } from '@/app/components/ui/input'
+import { ScrollArea } from '@/app/components/ui/scroll-area'
 import usePokemon from '@/app/composables/use-pokemon'
-import type { Pokemon } from '@/models/db'
 
 const props = defineProps<{
   ormService: SqliteRemoteDatabase
 }>()
 
-const { pokemonOrmService } = usePokemon(props.ormService)
+const { query, pokemonList, searchPokemon } = usePokemon(props.ormService)
 
-const query = ref('')
-const pokemonList = ref<Pokemon[]>([])
-
-watch(query, async (value) => {
-  if (!value || value === '') {
-    pokemonList.value = []
-    return
-  }
-
-  const result = await pokemonOrmService.searchPokemonByLikeName(value)
-
-  if (result instanceof Error) {
-    pokemonList.value = []
-    return
-  }
-
-  if (query.value === '') {
-    pokemonList.value = []
-    return
-  }
-
-  pokemonList.value = result
-})
+const onInput = async (query: string) => {
+  await searchPokemon(query)
+}
 </script>
 
 <template>
   <Command>
-    <Input v-model="query"></Input>
-    <CommandList>
-      <CommandEmpty>No results found.</CommandEmpty>
-      <CommandGroup heading="Results">
-        <CommandItem
-          v-for="pokemon in pokemonList.slice(0, 5)"
-          :key="pokemon.id"
-          :value="pokemon.name"
-        >
-          {{ pokemon.name }}
-        </CommandItem>
-      </CommandGroup>
+    <CommandInput
+      class="w-full"
+      placeholder="Search for a Pokemon"
+      @input="onInput($event.target.value)"
+    ></CommandInput>
+    <CommandList class="mt-1 w-full">
+      <ScrollArea class="h-48 w-full">
+        <CommandEmpty class="mt-10">
+          <div
+            v-if="query === ''"
+            class="flex size-full items-center justify-center"
+          >
+            <span class="w-60 text-sm text-gray-400">
+              Buscar cualquier pokemon para obtener una estragegia contra este
+            </span>
+          </div>
+          <div v-else class="flex size-full items-center justify-center">
+            <span class="w-60 text-sm text-gray-400">
+              No se encontraron resultados para "{{ query }}"
+            </span>
+          </div>
+        </CommandEmpty>
+        <CommandGroup heading="Pokemon">
+          <CommandItem
+            v-for="pokemon in pokemonList.slice(0, 50)"
+            :key="pokemon.id"
+            :value="pokemon.name"
+          >
+            <span class="capitalize">{{ pokemon.name }}</span>
+          </CommandItem>
+        </CommandGroup>
+      </ScrollArea>
     </CommandList>
   </Command>
 </template>
