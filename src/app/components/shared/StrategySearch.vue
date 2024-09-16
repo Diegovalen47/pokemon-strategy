@@ -20,7 +20,6 @@ globalStore.initialize()
 
 const isLoading = computed(() => globalStore.isLoading)
 const error = computed(() => globalStore.error)
-const data = computed(() => globalStore.data)
 const ormService = computed(
   () => globalStore.data?.ormService as SqliteRemoteDatabase
 )
