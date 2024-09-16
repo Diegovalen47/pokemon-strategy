@@ -1,4 +1,8 @@
-export default class Pokemon {
+import type { PokemonDB } from '../db'
+
+import { getIdFromUrl } from '@/utils/pokeapi'
+
+export class Pokemon implements PokemonDB {
   constructor(
     public id: number,
     public name: string,
@@ -10,11 +14,6 @@ export default class Pokemon {
   }
 
   public static fromJson(json: any): Pokemon {
-    return new Pokemon(this.getIdFromUrl(json.url), json.name, null)
-  }
-
-  private static getIdFromUrl(url: string): number {
-    const urlParts = url.split('/')
-    return Number(urlParts[urlParts.length - 2])
+    return new Pokemon(getIdFromUrl(json.url), json.name, null)
   }
 }

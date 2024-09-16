@@ -5,4 +5,4 @@ export const type = sqliteTable('TYPE', {
   name: text('name').unique().notNull()
 })
 
-export type type = typeof type.$inferSelect
+export type TypeDB = typeof type.$inferSelect

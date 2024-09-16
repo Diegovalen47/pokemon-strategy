@@ -1,7 +1,7 @@
 import type { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
 import { ref } from 'vue'
 
-import type { Pokemon } from '@/models/db'
+import type { Pokemon } from '@/models/core'
 import { PokemonOrmService } from '@/services/orm'
 
 const usePokemon = (ormService: SqliteRemoteDatabase) => {

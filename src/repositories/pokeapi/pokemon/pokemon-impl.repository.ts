@@ -5,7 +5,7 @@ import { type PokemonRepository } from './pokemon.repository'
 import { pokeApi } from '../api'
 
 import { CustomGeneralError } from '@/errors/db'
-import Pokemon from '@/models/core/pokemon'
+import { Pokemon } from '@/models/core'
 
 export class PokemonRepositoryImpl implements PokemonRepository {
   private pokeApi: AxiosInstance

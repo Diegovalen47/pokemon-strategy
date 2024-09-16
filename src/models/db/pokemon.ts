@@ -6,5 +6,4 @@ export const pokemon = sqliteTable('POKEMON', {
   sprite: text('sprite')
 })
 
-export type Pokemon = typeof pokemon.$inferSelect
-export type PokemonInsert = typeof pokemon.$inferInsert
+export type PokemonDB = typeof pokemon.$inferSelect

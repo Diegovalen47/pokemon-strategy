@@ -28,4 +28,4 @@ export const damageRelation = sqliteTable('DAMAGE_RELATION', {
     })
 })
 
-export type damageRelation = typeof damageRelation.$inferSelect
+export type DamageRelationDB = typeof damageRelation.$inferSelect

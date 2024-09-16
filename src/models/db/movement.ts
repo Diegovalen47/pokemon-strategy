@@ -13,4 +13,4 @@ export const movement = sqliteTable('MOVEMENT', {
     })
 })
 
-export type movement = typeof movement.$inferSelect
+export type MovementDB = typeof movement.$inferSelect

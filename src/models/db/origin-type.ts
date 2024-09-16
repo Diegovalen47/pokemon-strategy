@@ -26,4 +26,4 @@ export const originType = sqliteTable(
   }
 )
 
-export type originType = typeof originType.$inferSelect
+export type OriginTypeDB = typeof originType.$inferSelect

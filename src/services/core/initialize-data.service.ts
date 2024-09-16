@@ -1,15 +1,16 @@
 import { drizzle } from 'drizzle-orm/sqlite-proxy'
 import { SQLocalDrizzle } from 'sqlocal/drizzle'
 
-import { PokemonOrmService } from '../orm'
+import { PokemonOrmService, TypeOrmService } from '../orm'
 
 import { ResourceAlreadyExists } from '@/errors/db'
 import {
   PokemonRepositoryImpl,
+  TypeRepositoryImpl,
   type PokemonRepository
 } from '@/repositories/pokeapi'
 import { DatabaseService } from '@/services/db'
-import { PokemonService } from '@/services/pokemon'
+import { PokemonService, TypeService } from '@/services/pokemon'
 
 const DEFAULT_FILE_NAME = 'pokemondb.sqlite'
 
@@ -57,6 +58,13 @@ export class InitializeDataService {
 
     try {
       await pokemonService.getAllPokemonAndSaveInDb()
+      console.log('Pokemon obtenidos y cacheados')
+      const typeRepository = new TypeRepositoryImpl()
+      const typeOrmService = new TypeOrmService(ormService)
+      const typeService = new TypeService(typeRepository, typeOrmService)
+
+      await typeService.getAllTypesAndSaveInDb()
+      console.log('Tipos obtenidos y cacheados')
       return servicesToReturn
     } catch (error) {
       console.error('Error al obtener y guardar los pokemon', error)

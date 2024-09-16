@@ -1,4 +1,4 @@
-import type Pokemon from '@/models/core/pokemon'
+import { type Pokemon } from '@/models/core'
 
 export interface PokemonRepository {
   getPokemonCount(): Promise<number>

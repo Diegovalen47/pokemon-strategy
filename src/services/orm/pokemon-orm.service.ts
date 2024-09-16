@@ -1,9 +1,9 @@
 import { count, like } from 'drizzle-orm'
 import { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
 
-import { CustomGeneralError } from '../../errors/db/db'
+import { CustomGeneralError } from '../../errors/db'
 
-import type Pokemon from '@/models/core/pokemon'
+import { type Pokemon } from '@/models/core'
 import { pokemon } from '@/models/db'
 
 export class PokemonOrmService {

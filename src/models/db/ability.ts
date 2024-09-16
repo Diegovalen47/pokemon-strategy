@@ -6,4 +6,4 @@ export const ability = sqliteTable('ABILITY', {
   effect: text('effect')
 })
 
-export type ability = typeof ability.$inferSelect
+export type AbilityDB = typeof ability.$inferSelect
