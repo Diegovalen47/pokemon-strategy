@@ -6,7 +6,7 @@ import { type } from '@/models/db'
 export class TypeOrmService {
   constructor(public orm: SqliteRemoteDatabase) {}
 
-  async insertType(typeData: Type | Type[]): Promise<void> {
+  async insertTypes(typeData: Type | Type[]): Promise<void> {
     try {
       if (Array.isArray(typeData)) {
         await this.orm.insert(type).values(typeData)

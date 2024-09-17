@@ -12,12 +12,12 @@ export class TypeService {
     let { next, types } = await this.typeRepository.getTypesFirstList()
 
     while (next) {
-      await this.typeOrmService.insertType(types)
+      await this.typeOrmService.insertTypes(types)
       const response = await this.typeRepository.getTypesNextList(next)
       next = response.next
       types = response.types
     }
 
-    await this.typeOrmService.insertType(types)
+    await this.typeOrmService.insertTypes(types)
   }
 }

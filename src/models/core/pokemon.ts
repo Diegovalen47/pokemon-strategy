@@ -6,7 +6,7 @@ export class Pokemon implements PokemonDB {
   constructor(
     public id: number,
     public name: string,
-    public sprite: string | null
+    public sprite: string | null = null
   ) {
     this.id = id
     this.name = name
@@ -14,6 +14,6 @@ export class Pokemon implements PokemonDB {
   }
 
   public static fromJson(json: any): Pokemon {
-    return new Pokemon(getIdFromUrl(json.url), json.name, null)
+    return new Pokemon(getIdFromUrl(json.url), json.name)
   }
 }
