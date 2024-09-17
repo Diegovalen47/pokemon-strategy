@@ -5,4 +5,5 @@ export interface AbilityRepository {
   getAbilitiesNextList(
     url: string
   ): Promise<{ next: string; abilities: Ability[] }>
+  getAbilityByNameOrId(nameOrId: string | number): Promise<Ability>
 }

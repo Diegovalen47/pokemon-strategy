@@ -61,12 +61,14 @@ export class InitializeDataService {
       await pokemonService.getAllPokemonAndSaveInDb()
       console.log('Pokemon obtenidos y cacheados')
 
+      // Obtener tipos de pokemon y guardar en db
       const typeRepository = new TypeRepositoryImpl()
       const typeOrmService = new TypeOrmService(ormService)
       const typeService = new TypeService(typeRepository, typeOrmService)
       await typeService.getAllTypesAndSaveInDb()
       console.log('Tipos obtenidos y cacheados')
 
+      // Obtener habilidades de pokemon y guardar en db
       const abilityRepository = new AbilityRepositoryImpl()
       const abilityOrmService = new AbilityOrmService(ormService)
       const abilityService = new AbilityService(
@@ -75,6 +77,8 @@ export class InitializeDataService {
       )
       await abilityService.getAllAbilitiesAndSaveInDb()
       console.log('Habilidades obtenidas y cacheadas')
+      await abilityService.setAbilitiesEffect()
+      console.log('Efectos de habilidades seteados en db')
 
       return servicesToReturn
     } catch (error) {

@@ -49,7 +49,17 @@ export class AbilityRepositoryImpl implements AbilityRepository {
       }
     } catch (error) {
       console.error(error)
-      throw new CustomGeneralError('Error al obtener los pokemon')
+      throw new CustomGeneralError('Error al obtener las hibilidades')
+    }
+  }
+
+  async getAbilityByNameOrId(nameOrId: string | number): Promise<Ability> {
+    try {
+      const { data } = await this.pokeApi.get(`/ability/${nameOrId}`)
+      return Ability.fromDetailJson(data)
+    } catch (error) {
+      console.error(error)
+      throw new CustomGeneralError('Error al obtener la habilidad')
     }
   }
 }
