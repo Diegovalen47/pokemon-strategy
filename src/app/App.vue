@@ -2,6 +2,8 @@
 import { shallowRef } from 'vue'
 import { RouterView } from 'vue-router'
 
+import DeleteCacheButton from './components/shared/DeleteCacheButton.vue'
+
 import ThemeToggle from '@/app/components/shared/ThemeToggle.vue'
 import BasicLayout from '@/app/layouts/BasicLayout.vue'
 
@@ -15,6 +17,9 @@ const layout = shallowRef(BasicLayout)
     </component>
     <div class="absolute bottom-3 right-3">
       <ThemeToggle />
+    </div>
+    <div class="absolute bottom-3 left-3">
+      <DeleteCacheButton />
     </div>
   </div>
 </template>
