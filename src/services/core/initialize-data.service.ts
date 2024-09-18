@@ -1,17 +1,28 @@
 import { drizzle } from 'drizzle-orm/sqlite-proxy'
 import { SQLocalDrizzle } from 'sqlocal/drizzle'
 
-import { AbilityOrmService, PokemonOrmService, TypeOrmService } from '../orm'
+import {
+  AbilityOrmService,
+  MovementOrmService,
+  PokemonOrmService,
+  TypeOrmService
+} from '../orm'
 
 import { ResourceAlreadyExists } from '@/errors/db'
 import {
   AbilityRepositoryImpl,
+  MovementRepositoryImpl,
   PokemonRepositoryImpl,
   TypeRepositoryImpl,
   type PokemonRepository
 } from '@/repositories/pokeapi'
 import { DatabaseService } from '@/services/db'
-import { AbilityService, PokemonService, TypeService } from '@/services/pokemon'
+import {
+  AbilityService,
+  MovementService,
+  PokemonService,
+  TypeService
+} from '@/services/pokemon'
 
 const DEFAULT_FILE_NAME = 'pokemondb.sqlite'
 
@@ -32,7 +43,7 @@ export class InitializeDataService {
       ormService
     }
 
-    // Inicializacion de servicios
+    // Inicializacion de servicios pokemon
     const pokemonRepository = new PokemonRepositoryImpl()
     const pokemonOrmService = new PokemonOrmService(ormService)
     const pokemonService = new PokemonService(
@@ -79,6 +90,18 @@ export class InitializeDataService {
       console.log('Habilidades obtenidas y cacheadas')
       await abilityService.setAbilitiesEffect()
       console.log('Efectos de habilidades seteados en db')
+
+      // Obtener habilidades de pokemon y guardar en db
+      const movementRepository = new MovementRepositoryImpl()
+      const movementOrmService = new MovementOrmService(ormService)
+      const movementService = new MovementService(
+        movementRepository,
+        movementOrmService
+      )
+      await movementService.getAllMovementsAndSaveInDb()
+      console.log('Movimientos obtenidas y cacheadas')
+      await movementService.setMovementsExtraData()
+      console.log('Extra data de movimientos seteados en db')
 
       return servicesToReturn
     } catch (error) {

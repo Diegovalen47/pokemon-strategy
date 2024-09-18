@@ -67,6 +67,7 @@ export class DatabaseService {
     `
     await this.client.sql`
       CREATE TABLE ORIGIN_TYPE (
+        slot integer NOT NULL,
         pokemon_id integer NOT NULL,
         type_id integer NOT NULL,
         PRIMARY KEY(pokemon_id, type_id),
@@ -76,6 +77,7 @@ export class DatabaseService {
     `
     await this.client.sql`
       CREATE TABLE ORIGIN_ABILITY (
+        slot integer NOT NULL,
         pokemon_id integer NOT NULL,
         ability_id integer NOT NULL,
         PRIMARY KEY(pokemon_id, ability_id),
@@ -84,11 +86,27 @@ export class DatabaseService {
       )
     `
     await this.client.sql`
+      CREATE TABLE DAMAGE_RELATION (
+        id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+        relation text DEFAULT 'normal_damage' NOT NULL,
+        origin_type_id integer NOT NULL,
+        destiny_type_id integer NOT NULL,
+        FOREIGN KEY (origin_type_id) REFERENCES TYPE(id) ON UPDATE cascade ON DELETE cascade,
+        FOREIGN KEY (destiny_type_id) REFERENCES TYPE(id) ON UPDATE cascade ON DELETE cascade
+      )
+    `
+    await this.client.sql`
       CREATE TABLE MOVEMENT (
         id integer PRIMARY KEY NOT NULL,
         name text NOT NULL,
-        type_id integer NOT NULL,
-        FOREIGN KEY (type_id) REFERENCES TYPE(id) ON UPDATE cascade ON DELETE cascade
+        effect text,
+        damage_class text,
+        accuracy integer,
+        power integer,
+        pp integer,
+        priority integer,
+        type_id integer,
+        FOREIGN KEY (type_id) REFERENCES TYPE(id) ON UPDATE cascade ON DELETE set null
       )
     `
     await this.client.sql`

@@ -6,6 +6,7 @@ import { pokemon } from './pokemon'
 export const originAbility = sqliteTable(
   'ORIGIN_ABILITY',
   {
+    slot: integer('slot').notNull(),
     pokemonId: integer('pokemon_id')
       .notNull()
       .references(() => pokemon.id, {

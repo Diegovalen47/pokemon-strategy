@@ -2,23 +2,29 @@ import type { AbilityDB } from '../db'
 
 import { getIdFromUrl } from '@/utils/pokeapi'
 
+type AbilityConstructor = Partial<AbilityDB> & { id: number; name: string }
+
 export class Ability implements AbilityDB {
-  constructor(
-    public id: number,
-    public name: string,
-    public effect: string | null = null
-  ) {
+  public id: number
+  public name: string
+  public effect: string | null
+
+  constructor({ id, name, effect }: AbilityConstructor) {
     this.id = id
-    this.name = name
-    this.effect
+    this.name = name ?? null
+    this.effect = effect ?? null
   }
 
   public static fromJson(json: any): Ability {
-    return new Ability(getIdFromUrl(json.url), json.name)
+    return new Ability({ id: getIdFromUrl(json.url), name: json.name })
   }
 
   public static fromDetailJson(json: any): Ability {
-    return new Ability(json.id, json.name, this.searchLanguageEffect(json))
+    return new Ability({
+      id: json.id,
+      name: json.name,
+      effect: this.searchLanguageEffect(json)
+    })
   }
 
   public static searchLanguageEffect(json: any, lan: string = 'en'): string {
