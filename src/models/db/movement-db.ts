@@ -1,6 +1,6 @@
 import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core'
 
-import { type } from './type'
+import { type } from './type-db'
 
 export const movement = sqliteTable('MOVEMENT', {
   id: integer('id').primaryKey({ autoIncrement: false }),

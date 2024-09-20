@@ -30,7 +30,7 @@ export class MovementRepositoryImpl implements MovementRepository {
       }
     } catch (error) {
       console.error(error)
-      throw new Error('Error al obtener las habilidades')
+      throw new Error('Error al obtener las movements')
     }
   }
 
@@ -49,7 +49,7 @@ export class MovementRepositoryImpl implements MovementRepository {
       }
     } catch (error) {
       console.error(error)
-      throw new CustomGeneralError('Error al obtener las hibilidades')
+      throw new CustomGeneralError('Error al obtener las movements')
     }
   }
 
@@ -59,7 +59,7 @@ export class MovementRepositoryImpl implements MovementRepository {
       return Movement.fromDetailJson(data)
     } catch (error) {
       console.error(error)
-      throw new CustomGeneralError('Error al obtener la habilidad')
+      throw new CustomGeneralError('Error al obtener la movement')
     }
   }
 }

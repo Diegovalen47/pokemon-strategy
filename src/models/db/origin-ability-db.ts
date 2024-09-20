@@ -1,10 +1,10 @@
 import { sqliteTable, primaryKey, integer } from 'drizzle-orm/sqlite-core'
 
-import { pokemon } from './pokemon'
-import { type } from './type'
+import { ability } from './ability-db'
+import { pokemon } from './pokemon-db'
 
-export const originType = sqliteTable(
-  'ORIGIN_TYPE',
+export const originAbility = sqliteTable(
+  'ORIGIN_ABILITY',
   {
     slot: integer('slot').notNull(),
     pokemonId: integer('pokemon_id')
@@ -13,18 +13,18 @@ export const originType = sqliteTable(
         onDelete: 'cascade',
         onUpdate: 'cascade'
       }),
-    typeId: integer('type_id')
+    abilityId: integer('ability_id')
       .notNull()
-      .references(() => type.id, {
+      .references(() => ability.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade'
       })
   },
   (table) => {
     return {
-      pk: primaryKey({ columns: [table.pokemonId, table.typeId] })
+      pk: primaryKey({ columns: [table.pokemonId, table.abilityId] })
     }
   }
 )
 
-export type OriginTypeDB = typeof originType.$inferSelect
+export type OriginAbilityDB = typeof originAbility.$inferSelect

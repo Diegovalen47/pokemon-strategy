@@ -6,6 +6,7 @@ import type { TypeRepository } from './type.repository'
 
 import { CustomGeneralError } from '@/errors/db'
 import { Type } from '@/models/core'
+import type { TypePokeAPI } from '@/models/pokeapi'
 
 export class TypeRepositoryImpl implements TypeRepository {
   private pokeApi: AxiosInstance
@@ -47,6 +48,16 @@ export class TypeRepositoryImpl implements TypeRepository {
     } catch (error) {
       console.error(error)
       throw new CustomGeneralError('Error al obtener los pokemon')
+    }
+  }
+
+  async getTypeByNameOrId(nameOrId: string | number): Promise<TypePokeAPI> {
+    try {
+      const { data } = await this.pokeApi.get<TypePokeAPI>(`/type/${nameOrId}`)
+      return data
+    } catch (error) {
+      console.error(error)
+      throw new CustomGeneralError('Error al obtener la habilidad')
     }
   }
 }

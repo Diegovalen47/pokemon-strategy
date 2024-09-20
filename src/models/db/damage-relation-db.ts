@@ -1,6 +1,6 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
 
-import { type } from './type'
+import { type } from './type-db'
 
 export type Relation =
   | 'double_damage'
@@ -28,4 +28,4 @@ export const damageRelation = sqliteTable('DAMAGE_RELATION', {
     })
 })
 
-export type DamageRelationDB = typeof damageRelation.$inferSelect
+export type DamageRelationDB = typeof damageRelation.$inferInsert

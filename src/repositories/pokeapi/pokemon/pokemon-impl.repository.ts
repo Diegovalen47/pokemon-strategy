@@ -6,6 +6,7 @@ import { pokeApi } from '../api'
 
 import { CustomGeneralError } from '@/errors/db'
 import { Pokemon } from '@/models/core'
+import type { PokemonPokeAPI } from '@/models/pokeapi'
 
 export class PokemonRepositoryImpl implements PokemonRepository {
   private pokeApi: AxiosInstance
@@ -57,6 +58,20 @@ export class PokemonRepositoryImpl implements PokemonRepository {
     } catch (error) {
       console.error(error)
       throw new CustomGeneralError('Error al obtener los pokemon')
+    }
+  }
+
+  async getPokemonByNameOrId(
+    nameOrId: string | number
+  ): Promise<PokemonPokeAPI> {
+    try {
+      const { data } = await this.pokeApi.get<PokemonPokeAPI>(
+        `/pokemon/${nameOrId}`
+      )
+      return data
+    } catch (error) {
+      console.error(error)
+      throw new CustomGeneralError('Error al obtener el pokemon')
     }
   }
 }

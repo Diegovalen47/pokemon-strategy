@@ -64,6 +64,7 @@ export class InitializeDataService {
         console.log(
           'Base de datos local actualizada, no es necesario hacer cambios'
         )
+
         return servicesToReturn
       }
     }
@@ -78,6 +79,15 @@ export class InitializeDataService {
       const typeService = new TypeService(typeRepository, typeOrmService)
       await typeService.getAllTypesAndSaveInDb()
       console.log('Tipos obtenidos y cacheados')
+      await typeService.setTypesDamageRelations()
+      console.log('Relaciones de daño seteadas en db')
+
+      console.log(
+        await typeOrmService.getDamageRelationsForType({
+          relation: 'double_damage',
+          typeId: 2
+        })
+      )
 
       // Obtener habilidades de pokemon y guardar en db
       const abilityRepository = new AbilityRepositoryImpl()
@@ -91,7 +101,7 @@ export class InitializeDataService {
       await abilityService.setAbilitiesEffect()
       console.log('Efectos de habilidades seteados en db')
 
-      // Obtener habilidades de pokemon y guardar en db
+      // Obtener movements de pokemon y guardar en db
       const movementRepository = new MovementRepositoryImpl()
       const movementOrmService = new MovementOrmService(ormService)
       const movementService = new MovementService(
@@ -102,6 +112,9 @@ export class InitializeDataService {
       console.log('Movimientos obtenidas y cacheadas')
       await movementService.setMovementsExtraData()
       console.log('Extra data de movimientos seteados en db')
+
+      await pokemonService.setPokemonExtraData()
+      console.log('Datos extra de pokemon seteados en db')
 
       return servicesToReturn
     } catch (error) {
