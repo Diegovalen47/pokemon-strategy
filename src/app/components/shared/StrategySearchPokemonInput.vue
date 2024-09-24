@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
-
 import {
   Command,
   CommandInput,
@@ -12,11 +10,7 @@ import {
 import { ScrollArea } from '@/app/components/ui/scroll-area'
 import usePokemon from '@/app/composables/use-pokemon'
 
-const props = defineProps<{
-  ormService: SqliteRemoteDatabase
-}>()
-
-const { query, pokemonList, searchPokemon } = usePokemon(props.ormService)
+const { query, pokemonList, searchPokemon } = usePokemon()
 
 const onInput = async (query: string) => {
   await searchPokemon(query)

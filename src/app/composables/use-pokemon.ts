@@ -1,13 +1,13 @@
-import type { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
 import { ref } from 'vue'
 
-import type { Pokemon } from '@/models/core'
-import { PokemonOrmService } from '@/services/orm'
+import { usePokemonStore } from '../stores/pokemon'
 
-const usePokemon = (ormService: SqliteRemoteDatabase) => {
-  const pokemonOrmService = new PokemonOrmService(ormService)
+import type { PokemonLocal } from '@/modules/pokemon/domain/entities/pokemon-local.entity'
 
-  const pokemonList = ref<Pokemon[]>([])
+const usePokemon = () => {
+  const pokemonStore = usePokemonStore()
+
+  const pokemonList = ref<PokemonLocal[]>([])
   const query = ref('')
 
   const searchPokemon = async (name: string) => {
@@ -17,7 +17,8 @@ const usePokemon = (ormService: SqliteRemoteDatabase) => {
       return
     }
 
-    const result = await pokemonOrmService.searchPokemonByLikeName(name)
+    const result =
+      await pokemonStore.pokemonService.searchPokemonByLikeName(name)
 
     if (result instanceof Error) {
       pokemonList.value = []

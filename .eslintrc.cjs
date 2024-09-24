@@ -16,6 +16,7 @@ module.exports = {
     'plugin:import/recommended',
     'plugin:import/typescript'
   ],
+  plugins: ['hexagonal-architecture'],
   overrides: [
     {
       files: [
@@ -23,6 +24,12 @@ module.exports = {
         'cypress/support/**/*.{js,ts,jsx,tsx}'
       ],
       extends: ['plugin:cypress/recommended']
+    },
+    {
+      files: ['src/modules/**/*.ts'],
+      rules: {
+        'hexagonal-architecture/enforce': ['error']
+      }
     }
   ],
   parserOptions: {

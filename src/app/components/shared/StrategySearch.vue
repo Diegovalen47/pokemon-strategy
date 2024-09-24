@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import type { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
 import { Loader2 } from 'lucide-vue-next'
-import { computed } from 'vue'
 
 import StrategySearchPokemonInput from './StrategySearchPokemonInput.vue'
 
@@ -13,16 +11,11 @@ import {
   TabsList,
   TabsTriggerCarpet
 } from '@/app/components/ui/tabs'
-import { useGlobalStore } from '@/app/stores/global'
+import { usePokemonStore } from '@/app/stores/pokemon'
 
-const globalStore = useGlobalStore()
-globalStore.initialize()
+const pokemonStore = usePokemonStore()
 
-const isLoading = computed(() => globalStore.isLoading)
-const error = computed(() => globalStore.error)
-const ormService = computed(
-  () => globalStore.data?.ormService as SqliteRemoteDatabase
-)
+pokemonStore.checkIfPokemonDataIsCached()
 </script>
 
 <template>
@@ -41,18 +34,24 @@ const ormService = computed(
         class="mt-0 rounded-2xl rounded-t-none border-4 p-2 data-[state=active]:rounded-se-2xl"
       >
         <!-- <div v-if="error"> -->
-        <div v-if="error" class="flex flex-col items-center justify-center">
+        <div
+          v-if="pokemonStore.error"
+          class="flex flex-col items-center justify-center"
+        >
           <p class="text-red-500">{{ 'Error al cargar los datos' }}</p>
           <Button
             variant="ghost"
-            :disabled="isLoading"
-            @click="globalStore.initialize()"
+            :disabled="pokemonStore.isLoading"
+            @click="pokemonStore.checkIfPokemonDataIsCached()"
           >
-            <Loader2 v-if="isLoading" class="size-4 animate-spin" />
+            <Loader2
+              v-if="pokemonStore.isLoading"
+              class="size-4 animate-spin"
+            />
             <span v-else> Recargar </span>
           </Button>
         </div>
-        <div v-else-if="isLoading" class="flex flex-col space-y-3">
+        <div v-else-if="pokemonStore.isLoading" class="flex flex-col space-y-3">
           <div
             class="flex h-[40px] w-full items-center justify-center gap-2 rounded-xl"
           >
@@ -70,7 +69,7 @@ const ormService = computed(
             <Skeleton class="h-4 w-full" />
           </div>
         </div>
-        <StrategySearchPokemonInput v-else :orm-service="ormService" />
+        <StrategySearchPokemonInput v-else />
       </TabsContent>
       <TabsContent
         value="movement"

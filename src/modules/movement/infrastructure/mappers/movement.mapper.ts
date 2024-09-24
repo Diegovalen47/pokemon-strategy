@@ -1,0 +1,53 @@
+import { Movement } from '../../domain'
+
+import { getIdFromUrl } from '@/modules/shared/infrastructure'
+
+export class MovementMapper {
+  public static fromJson(json: any): Movement {
+    return new Movement({ id: getIdFromUrl(json.url), name: json.name })
+  }
+
+  public static fromDetailJson(json: any): Movement {
+    return new Movement({
+      id: json.id,
+      name: json.name,
+      effect: this.searchLanguageEffect(json),
+      damageClass: json.damage_class.name,
+      accuracy: json.accuracy,
+      power: json.power,
+      pp: json.pp,
+      priority: json.priority,
+      typeId: getIdFromUrl(json.type.url)
+    })
+  }
+
+  public static searchLanguageEffect(json: any, lan: string = 'en'): string {
+    const effects = json.effect_entries
+
+    if (effects.length !== 0) {
+      const langEffect = effects.find(
+        (effect: any) => effect.language.name === lan
+      )
+
+      if (langEffect) {
+        return langEffect.effect as string
+      }
+
+      return effects[0].effect as string
+    }
+
+    if (json.flavor_text_entries.length !== 0) {
+      const langEffect = json.flavor_text_entries.find(
+        (effect: any) => effect.language.name === lan
+      )
+
+      if (langEffect) {
+        return langEffect.flavor_text as string
+      }
+
+      return json.flavor_text_entries[0].flavor_text as string
+    }
+
+    return 'No effect'
+  }
+}
