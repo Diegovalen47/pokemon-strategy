@@ -13,12 +13,8 @@ databaseStore.createTables()
 </script>
 
 <template>
-  <div
-    class="flex size-full flex-col justify-center gap-10 md:flex-row md:gap-0"
-  >
-    <div
-      class="flex h-min justify-center md:h-full md:w-5/12 md:flex-col md:items-center"
-    >
+  <div class="flex size-full flex-col justify-center gap-10 md:flex-row md:gap-0">
+    <div class="flex h-min justify-center md:h-full md:w-5/12 md:flex-col md:items-center">
       <div class="md:h-2/5"></div>
       <div v-if="databaseStore.isErrorTables">
         <p class="text-red-500">{{ databaseStore.errorTables }}</p>

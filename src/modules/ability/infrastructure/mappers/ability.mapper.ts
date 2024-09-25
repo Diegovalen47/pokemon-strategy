@@ -19,9 +19,7 @@ export class AbilityMapper {
     const effects = json.effect_entries
 
     if (effects.length !== 0) {
-      const langEffect = effects.find(
-        (effect: any) => effect.language.name === lan
-      )
+      const langEffect = effects.find((effect: any) => effect.language.name === lan)
 
       if (langEffect) {
         return langEffect.effect as string

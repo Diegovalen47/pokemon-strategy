@@ -29,9 +29,7 @@ export class AbilityPokeapiRepository implements AbilityRemoteRepository {
     }
   }
 
-  async getAbilitiesNextList(
-    url: string
-  ): Promise<{ next: string; abilities: Ability[] }> {
+  async getAbilitiesNextList(url: string): Promise<{ next: string; abilities: Ability[] }> {
     try {
       const { data } = await axios.get(url)
       const abilitiesList: Ability[] = data.results.map((ability: any) => {

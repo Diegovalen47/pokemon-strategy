@@ -29,9 +29,7 @@ export class MovementPokeapiRepository implements MovementRemoteRepository {
     }
   }
 
-  async getMovementsNextList(
-    url: string
-  ): Promise<{ next: string; movements: Movement[] }> {
+  async getMovementsNextList(url: string): Promise<{ next: string; movements: Movement[] }> {
     try {
       const { data } = await axios.get(url)
       const movementsList: Movement[] = data.results.map((movement: any) => {

@@ -1,11 +1,7 @@
 import type { AxiosInstance } from 'axios'
 import axios from 'axios'
 
-import type {
-  PokemonLocal,
-  PokemonRemote,
-  PokemonRemoteRepository
-} from '../../domain'
+import type { PokemonLocal, PokemonRemote, PokemonRemoteRepository } from '../../domain'
 import { PokemonMapper } from '../mappers'
 
 import { CustomGeneralError } from '@/errors/db'
@@ -43,9 +39,7 @@ export class PokemonPokeapiRepository implements PokemonRemoteRepository {
     }
   }
 
-  async getPokemonNextList(
-    url: string
-  ): Promise<{ next: string; pokemon: PokemonLocal[] }> {
+  async getPokemonNextList(url: string): Promise<{ next: string; pokemon: PokemonLocal[] }> {
     try {
       const { data } = await axios.get(url)
       const pokemonList: PokemonLocal[] = data.results.map((pokemon: any) => {
@@ -62,9 +56,7 @@ export class PokemonPokeapiRepository implements PokemonRemoteRepository {
     }
   }
 
-  async getPokemonByNameOrId(
-    nameOrId: string | number
-  ): Promise<PokemonRemote> {
+  async getPokemonByNameOrId(nameOrId: string | number): Promise<PokemonRemote> {
     try {
       const { data } = await this.pokeApi.get(`/pokemon/${nameOrId}`)
       return PokemonMapper.fromDetailJson(data)

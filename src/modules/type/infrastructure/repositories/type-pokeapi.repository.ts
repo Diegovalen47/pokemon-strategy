@@ -28,9 +28,7 @@ export class TypePokeapiRepository implements TypeRemoteRepository {
     }
   }
 
-  async getTypesNextList(
-    url: string
-  ): Promise<{ next: string; types: TypeLocal[] }> {
+  async getTypesNextList(url: string): Promise<{ next: string; types: TypeLocal[] }> {
     try {
       const { data } = await axios.get(url)
       const typesList: TypeLocal[] = data.results.map((type: any) => {
