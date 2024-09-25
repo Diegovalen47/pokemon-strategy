@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm'
+import { count, eq } from 'drizzle-orm'
 import type { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
 
 import type { Ability, AbilityLocalRepository } from '../../domain'
@@ -22,12 +22,18 @@ export class AbilityOrmRepository implements AbilityLocalRepository {
     }
   }
 
+  async getAbilitiesCount(): Promise<number> {
+    try {
+      return (await this.orm.select({ value: count() }).from(ability))[0].value
+    } catch (error) {
+      console.error('Error al obtener todos los abilities', error)
+      throw new Error('Error al contar los abilities')
+    }
+  }
+
   async updateAbility(abilityData: Ability): Promise<void> {
     try {
-      await this.orm
-        .update(ability)
-        .set(abilityData)
-        .where(eq(ability.id, abilityData.id))
+      await this.orm.update(ability).set(abilityData).where(eq(ability.id, abilityData.id))
       console.log('Ability actualizado')
     } catch (error) {
       console.error('Error al actualizar ability', error)

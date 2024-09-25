@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Paintbrush, Loader2 } from 'lucide-vue-next'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 
 import { Button } from '@/app/components/ui/button'
 import {
@@ -9,21 +9,16 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/app/components/ui/tooltip'
-import { useGlobalStore } from '@/app/stores/global'
-import type { DatabaseService } from '@/services/db'
+import { useDatabaseStore } from '@/app/stores/services/database'
 
-const globalStore = useGlobalStore()
+const databaseStore = useDatabaseStore()
 
 const isDeleteLoading = ref(false)
-const isLoading = computed(() => globalStore.isLoading)
-const databaseService = computed(
-  () => globalStore.data?.databaseService as DatabaseService
-)
 
 const onClick = async () => {
   try {
     isDeleteLoading.value = true
-    await databaseService.value.deleteDatabase()
+    await databaseStore.databaseService.deleteDatabase()
     window.location.reload()
     isDeleteLoading.value = false
   } catch (error) {
@@ -36,7 +31,7 @@ const onClick = async () => {
   <TooltipProvider>
     <Tooltip :delay-duration="200">
       <TooltipTrigger as-child>
-        <Button v-if="!isLoading" variant="outline" @click="onClick">
+        <Button v-if="databaseStore.isSuccessTables" variant="outline" @click="onClick">
           <Loader2 v-if="isDeleteLoading" class="size-4 animate-spin" />
           <Paintbrush v-else />
         </Button>

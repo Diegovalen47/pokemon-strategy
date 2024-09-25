@@ -7,13 +7,11 @@ export class PokemonService {
   ) {}
 
   async getAllPokemonAndSaveInDb(): Promise<void> {
-    let { next, pokemon } =
-      await this.pokemonRemoteRepository.getPokemonFirstList()
+    let { next, pokemon } = await this.pokemonRemoteRepository.getPokemonFirstList()
 
     while (next) {
       await this.pokemonLocalRepository.insertPokemon(pokemon)
-      const response =
-        await this.pokemonRemoteRepository.getPokemonNextList(next)
+      const response = await this.pokemonRemoteRepository.getPokemonNextList(next)
       next = response.next
       pokemon = response.pokemon
     }
@@ -31,9 +29,7 @@ export class PokemonService {
         const batch = pokemonList.slice(i, i + batchSize)
 
         const pokemonDetailsList = await Promise.all(
-          batch.map((pokemon) =>
-            this.pokemonRemoteRepository.getPokemonByNameOrId(pokemon.id)
-          )
+          batch.map((pokemon) => this.pokemonRemoteRepository.getPokemonByNameOrId(pokemon.id))
         )
 
         for (const pokemonDetails of pokemonDetailsList) {
@@ -44,15 +40,6 @@ export class PokemonService {
 
           for (const ability of pokemonDetails.abilities) {
             const abilityId = ability.id
-            console.log(
-              'insertOriginAbility',
-              'abilityId',
-              abilityId,
-              'pokemonId',
-              pokemonDetails.id,
-              'slot',
-              ability.slot
-            )
             await this.pokemonLocalRepository.insertOriginAbility({
               pokemonId: pokemonDetails.id,
               abilityId,
@@ -75,6 +62,18 @@ export class PokemonService {
     }
   }
 
+  async getPokemonLocalCount() {
+    return await this.pokemonLocalRepository.getPokemonCount()
+  }
+
+  async getOriginAbilitiesLocalCount() {
+    return await this.pokemonLocalRepository.getOriginAbilitiesCount()
+  }
+
+  async getOriginTypesLocalCount() {
+    return await this.pokemonLocalRepository.getOriginTypesCount()
+  }
+
   async searchPokemonByLikeName(query: string) {
     return this.pokemonLocalRepository.searchPokemonByLikeName(query)
   }
@@ -86,12 +85,8 @@ export class PokemonService {
    * false ya que usara cache.
    */
   async hasToRefreshData() {
-    const pokemonCountRemote =
-      await this.pokemonRemoteRepository.getPokemonCount()
-    const pokemonCountLocal =
-      await this.pokemonLocalRepository.getPokemonCount()
-    console.log('pokemonCountRemote', pokemonCountRemote)
-    console.log('pokemonCountLocal', pokemonCountLocal)
+    const pokemonCountRemote = await this.pokemonRemoteRepository.getPokemonCount()
+    const pokemonCountLocal = await this.pokemonLocalRepository.getPokemonCount()
 
     if (pokemonCountRemote > pokemonCountLocal) {
       return true

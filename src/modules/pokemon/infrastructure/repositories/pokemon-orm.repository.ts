@@ -4,11 +4,7 @@ import { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
 import type { PokemonLocal, PokemonLocalRepository } from '../../domain'
 
 import { CustomGeneralError } from '@/errors/db'
-import {
-  originAbility,
-  originType,
-  pokemon
-} from '@/modules/shared/infrastructure/models/db'
+import { originAbility, originType, pokemon } from '@/modules/shared/infrastructure/models/db'
 
 export class PokemonOrmRepository implements PokemonLocalRepository {
   constructor(public orm: SqliteRemoteDatabase) {}
@@ -41,9 +37,7 @@ export class PokemonOrmRepository implements PokemonLocalRepository {
     }
   }
 
-  async searchPokemonByLikeName(
-    query: string
-  ): Promise<PokemonLocal[] | Error> {
+  async searchPokemonByLikeName(query: string): Promise<PokemonLocal[] | Error> {
     try {
       const pokemonList = await this.orm
         .select()
@@ -57,9 +51,7 @@ export class PokemonOrmRepository implements PokemonLocalRepository {
     }
   }
 
-  async insertPokemon(
-    pokemonData: PokemonLocal | PokemonLocal[]
-  ): Promise<void> {
+  async insertPokemon(pokemonData: PokemonLocal | PokemonLocal[]): Promise<void> {
     try {
       if (Array.isArray(pokemonData)) {
         await this.orm.insert(pokemon).values(pokemonData)
@@ -73,6 +65,24 @@ export class PokemonOrmRepository implements PokemonLocalRepository {
     }
   }
 
+  async getOriginAbilitiesCount(): Promise<number> {
+    try {
+      return (await this.orm.select({ value: count() }).from(originAbility))[0].value
+    } catch (error) {
+      console.error('Error al obtener todos los origin abilities', error)
+      throw new CustomGeneralError('Error al contar los origin abilities')
+    }
+  }
+
+  async getOriginTypesCount(): Promise<number> {
+    try {
+      return (await this.orm.select({ value: count() }).from(originType))[0].value
+    } catch (error) {
+      console.error('Error al obtener todos los origin types', error)
+      throw new CustomGeneralError('Error al contar los origin types')
+    }
+  }
+
   async insertOriginAbility({
     pokemonId,
     abilityId,
@@ -83,12 +93,10 @@ export class PokemonOrmRepository implements PokemonLocalRepository {
     slot: number
   }): Promise<void> {
     try {
-      await this.orm
-        .insert(originAbility)
-        .values({ pokemonId, abilityId, slot })
+      await this.orm.insert(originAbility).values({ pokemonId, abilityId, slot })
       console.log('OriginAbility insertado')
     } catch (error) {
-      console.error('Error al insertar OriginAbility', error)
+      console.warn('Error al insertar OriginAbility', error)
     }
   }
 
@@ -105,7 +113,7 @@ export class PokemonOrmRepository implements PokemonLocalRepository {
       await this.orm.insert(originType).values({ pokemonId, typeId, slot })
       console.log('OriginType insertado')
     } catch (error) {
-      console.error('Error al insertar OriginType', error)
+      console.warn('Error al insertar OriginType', error)
     }
   }
 }

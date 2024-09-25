@@ -1,13 +1,9 @@
-import { eq, and } from 'drizzle-orm'
+import { eq, and, count } from 'drizzle-orm'
 import type { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
 
 import type { TypeLocal, TypeLocalRepository } from '../../domain'
 
-import {
-  damageRelation,
-  type,
-  type Relation
-} from '@/modules/shared/infrastructure/models/db'
+import { damageRelation, type, type Relation } from '@/modules/shared/infrastructure/models/db'
 
 export class TypeOrmRepository implements TypeLocalRepository {
   constructor(public orm: SqliteRemoteDatabase) {}
@@ -26,6 +22,15 @@ export class TypeOrmRepository implements TypeLocalRepository {
     }
   }
 
+  async getTypesCount(): Promise<number> {
+    try {
+      return (await this.orm.select({ value: count() }).from(type))[0].value
+    } catch (error) {
+      console.error('Error al obtener todos los typos', error)
+      throw new Error('Error al contar los pokemon')
+    }
+  }
+
   async getAllTypes(): Promise<TypeLocal[]> {
     try {
       const types = await this.orm.select().from(type)
@@ -36,15 +41,22 @@ export class TypeOrmRepository implements TypeLocalRepository {
     }
   }
 
+  async getDamageRelationsCount(): Promise<number> {
+    try {
+      return (await this.orm.select({ value: count() }).from(damageRelation))[0].value
+    } catch (error) {
+      console.error('Error al obtener todas las relaciones de daño', error)
+      throw new Error('Error al contar las relaciones de daño')
+    }
+  }
+
   async insertDamageRelation(
     originTypeId: number,
     destinyTypeId: number,
     relation: Relation
   ): Promise<void> {
     try {
-      await this.orm
-        .insert(damageRelation)
-        .values({ originTypeId, destinyTypeId, relation })
+      await this.orm.insert(damageRelation).values({ originTypeId, destinyTypeId, relation })
       console.log('DamageRelation insertado')
     } catch (error) {
       console.error('Error al insertar DamageRelation', error)
@@ -62,12 +74,7 @@ export class TypeOrmRepository implements TypeLocalRepository {
       const types = await this.orm
         .select()
         .from(damageRelation)
-        .where(
-          and(
-            eq(damageRelation.relation, relation),
-            eq(damageRelation.originTypeId, typeId)
-          )
-        )
+        .where(and(eq(damageRelation.relation, relation), eq(damageRelation.originTypeId, typeId)))
         .leftJoin(type, eq(damageRelation.destinyTypeId, type.id))
         .all()
       return types

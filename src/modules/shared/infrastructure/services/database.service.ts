@@ -1,7 +1,5 @@
 import { SQLocalDrizzle } from 'sqlocal/drizzle'
 
-import { ResourceAlreadyExists } from '@/errors/db'
-
 export type DatabaseClient = Omit<SQLocalDrizzle, 'driver' | 'batchDriver'>
 
 export class DatabaseService {
@@ -30,17 +28,51 @@ export class DatabaseService {
     }
   }
 
-  public async createTables(): Promise<String | Error> {
+  public async createTables(): Promise<void> {
     try {
       await this.makeQuery()
       console.log('Tablas creadas')
-      return 'Tablas creadas con exito'
     } catch (error: any) {
-      console.warn('Error al crear tablas', error)
-      if (String(error).includes('already exists')) {
-        return new ResourceAlreadyExists('La tabla ya existe')
+      console.error('Error al crear tablas', error)
+      throw new Error('Error al crear tablas')
+    }
+  }
+
+  public async allTablesExists(): Promise<boolean> {
+    try {
+      for (const table of [
+        'POKEMON',
+        'TYPE',
+        'ABILITY',
+        'ORIGIN_TYPE',
+        'ORIGIN_ABILITY',
+        'DAMAGE_RELATION',
+        'MOVEMENT'
+      ]) {
+        if (!(await this.tableExists(table))) {
+          console.log('No existe la tabla', table)
+          return false
+        }
       }
-      throw new Error(String(error))
+      console.log('Todas las tablas existen en cache')
+      return true
+    } catch (error) {
+      console.error('Error al verificar si todas las tablas existen', error)
+      throw new Error('Error al verificar si todas las tablas existen')
+    }
+  }
+
+  public async tableExists(tableName: string): Promise<boolean> {
+    try {
+      const result = await this.client.sql`
+        SELECT name
+        FROM sqlite_master
+        WHERE type='table' AND name=${tableName}
+      `
+      return result.length > 0
+    } catch (error) {
+      console.error('Error al verificar si la tabla existe', error)
+      throw new Error('Error al verificar si la tabla existe')
     }
   }
 

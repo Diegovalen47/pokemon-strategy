@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm'
+import { count, eq } from 'drizzle-orm'
 import type { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
 
 import type { Movement, MovementLocalRepository } from '../../domain'
@@ -22,12 +22,18 @@ export class MovementOrmRepository implements MovementLocalRepository {
     }
   }
 
+  async getMovementsCount(): Promise<number> {
+    try {
+      return (await this.orm.select({ value: count() }).from(movement))[0].value
+    } catch (error) {
+      console.error('Error al obtener todos los movimientos', error)
+      throw new Error('Error al contar los movimientos')
+    }
+  }
+
   async updateMovement(movementData: Movement): Promise<void> {
     try {
-      await this.orm
-        .update(movement)
-        .set(movementData)
-        .where(eq(movement.id, movementData.id))
+      await this.orm.update(movement).set(movementData).where(eq(movement.id, movementData.id))
       console.log('Movement actualizado')
     } catch (error) {
       console.error('Error al actualizar movement', error)

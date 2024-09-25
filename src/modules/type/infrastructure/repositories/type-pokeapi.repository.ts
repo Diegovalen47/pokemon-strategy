@@ -4,8 +4,6 @@ import axios from 'axios'
 import type { TypeLocal, TypeRemote, TypeRemoteRepository } from '../../domain'
 import { TypeMapper } from '../mappers'
 
-import { CustomGeneralError } from '@/errors/db'
-
 export class TypePokeapiRepository implements TypeRemoteRepository {
   constructor(private pokeApi: AxiosInstance) {}
 
@@ -21,8 +19,12 @@ export class TypePokeapiRepository implements TypeRemoteRepository {
         types: typesList
       }
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('error de axios', error)
+        throw error
+      }
       console.error(error)
-      throw new Error('Error al obtener los tipos')
+      throw new Error('Error al obtener los primeros tipos')
     }
   }
 
@@ -40,8 +42,12 @@ export class TypePokeapiRepository implements TypeRemoteRepository {
         types: typesList
       }
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('error de axios', error)
+        throw error
+      }
       console.error(error)
-      throw new CustomGeneralError('Error al obtener los pokemon')
+      throw new Error('Error al obtener los siguientes tipos')
     }
   }
 
@@ -50,8 +56,12 @@ export class TypePokeapiRepository implements TypeRemoteRepository {
       const { data } = await this.pokeApi.get(`/type/${nameOrId}`)
       return TypeMapper.fromDetailJson(data)
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('error de axios', error)
+        throw error
+      }
       console.error(error)
-      throw new CustomGeneralError('Error al obtener la habilidad')
+      throw new Error('Error al obtener tipo')
     }
   }
 }

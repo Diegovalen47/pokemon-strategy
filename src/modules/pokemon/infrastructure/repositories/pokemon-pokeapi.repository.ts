@@ -10,7 +10,7 @@ import { PokemonMapper } from '../mappers'
 
 import { CustomGeneralError } from '@/errors/db'
 
-export class PokemonPokeapiRespository implements PokemonRemoteRepository {
+export class PokemonPokeapiRepository implements PokemonRemoteRepository {
   constructor(private pokeApi: AxiosInstance) {}
 
   async getPokemonCount(): Promise<number> {

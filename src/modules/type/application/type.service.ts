@@ -19,16 +19,18 @@ export class TypeService {
     await this.typeLocalRepository.insertTypes(types)
   }
 
+  async getTypesLocalCount(): Promise<number> {
+    return await this.typeLocalRepository.getTypesCount()
+  }
+
   async setTypesDamageRelations(): Promise<void> {
     try {
       const types = await this.typeLocalRepository.getAllTypes()
 
       for (const originType of types) {
-        const originTypeDetails =
-          await this.typeRemoteRepository.getTypeByNameOrId(originType.id)
+        const originTypeDetails = await this.typeRemoteRepository.getTypeByNameOrId(originType.id)
 
-        for (const relation of originTypeDetails.damageRelations
-          .doubleDamageTo) {
+        for (const relation of originTypeDetails.damageRelations.doubleDamageTo) {
           const destinyTypeId = relation.destinyTypeId
           await this.typeLocalRepository.insertDamageRelation(
             originType.id,
@@ -60,5 +62,9 @@ export class TypeService {
     } catch (error) {
       console.error('Error al actualizar relaciones de daño de tipos', error)
     }
+  }
+
+  async getTypesDamageRelationsCount(): Promise<number> {
+    return await this.typeLocalRepository.getDamageRelationsCount()
   }
 }

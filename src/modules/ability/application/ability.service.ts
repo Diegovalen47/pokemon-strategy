@@ -7,18 +7,20 @@ export class AbilityService {
   ) {}
 
   async getAllAbilitiesAndSaveInDb(): Promise<void> {
-    let { next, abilities } =
-      await this.abilityRemoteRepository.getAbilitiesFirstList()
+    let { next, abilities } = await this.abilityRemoteRepository.getAbilitiesFirstList()
 
     while (next) {
       await this.abilityLocalRepository.insertAbilities(abilities)
-      const response =
-        await this.abilityRemoteRepository.getAbilitiesNextList(next)
+      const response = await this.abilityRemoteRepository.getAbilitiesNextList(next)
       next = response.next
       abilities = response.abilities
     }
 
     await this.abilityLocalRepository.insertAbilities(abilities)
+  }
+
+  async getAbilitiesLocalCount(): Promise<number> {
+    return await this.abilityLocalRepository.getAbilitiesCount()
   }
 
   async setAbilitiesEffect(): Promise<void> {
@@ -29,9 +31,7 @@ export class AbilityService {
       for (let i = 0; i < abilities.length; i += batchSize) {
         const batch = abilities.slice(i, i + batchSize)
         const abilityDetails = await Promise.all(
-          batch.map((ability) =>
-            this.abilityRemoteRepository.getAbilityByNameOrId(ability.id)
-          )
+          batch.map((ability) => this.abilityRemoteRepository.getAbilityByNameOrId(ability.id))
         )
         await Promise.all(
           abilityDetails.map((abilityDetail) =>

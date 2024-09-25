@@ -2,10 +2,9 @@ import { useQuery } from '@tanstack/vue-query'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-import { ResourceAlreadyExists } from '@/errors/db'
 import { InitializeLocalDbService } from '@/modules/shared/infrastructure/services'
 
-export const useGlobalStore = defineStore('global', () => {
+export const useDatabaseStore = defineStore('database', () => {
   const initialDataService = new InitializeLocalDbService()
 
   const databaseService = ref(initialDataService.databaseService)
@@ -13,17 +12,19 @@ export const useGlobalStore = defineStore('global', () => {
 
   const {
     data: tablesAlreadyExists,
-    isLoading,
-    isError,
-    error,
+    isLoading: isLoadingTables,
+    isError: isErrorTables,
+    error: errorTables,
+    isSuccess: isSuccessTables,
     refetch: createTables
   } = useQuery({
     queryKey: ['createLocalDatabase'],
     queryFn: async () => {
-      const data = await databaseService.value.createTables()
-      if (data instanceof ResourceAlreadyExists) {
+      if (await databaseService.value.allTablesExists()) {
         return true
       }
+
+      await databaseService.value.createTables()
       return false
     },
     enabled: false
@@ -32,9 +33,10 @@ export const useGlobalStore = defineStore('global', () => {
   return {
     databaseService,
     ormService,
-    isLoading,
-    isError,
-    error,
+    isLoadingTables,
+    isErrorTables,
+    isSuccessTables,
+    errorTables,
     tablesAlreadyExists,
     createTables
   }

@@ -1,10 +1,9 @@
 import { ref } from 'vue'
 
-import { usePokemonStore } from '../stores/pokemon'
-
+import { usePokemonStore } from '@/app/stores/services'
 import type { PokemonLocal } from '@/modules/pokemon/domain/entities/pokemon-local.entity'
 
-const usePokemon = () => {
+export const usePokemonSearch = () => {
   const pokemonStore = usePokemonStore()
 
   const pokemonList = ref<PokemonLocal[]>([])
@@ -17,8 +16,7 @@ const usePokemon = () => {
       return
     }
 
-    const result =
-      await pokemonStore.pokemonService.searchPokemonByLikeName(name)
+    const result = await pokemonStore.pokemonService.searchPokemonByLikeName(name)
 
     if (result instanceof Error) {
       pokemonList.value = []
@@ -30,5 +28,3 @@ const usePokemon = () => {
 
   return { query, pokemonList, searchPokemon }
 }
-
-export default usePokemon

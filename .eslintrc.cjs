@@ -19,10 +19,7 @@ module.exports = {
   plugins: ['hexagonal-architecture'],
   overrides: [
     {
-      files: [
-        'cypress/e2e/**/*.{cy,spec}.{js,ts,jsx,tsx}',
-        'cypress/support/**/*.{js,ts,jsx,tsx}'
-      ],
+      files: ['cypress/e2e/**/*.{cy,spec}.{js,ts,jsx,tsx}', 'cypress/support/**/*.{js,ts,jsx,tsx}'],
       extends: ['plugin:cypress/recommended']
     },
     {
@@ -41,7 +38,8 @@ module.exports = {
       {
         singleQuote: true,
         semi: false,
-        trailingComma: 'none'
+        trailingComma: 'none',
+        printWidth: 100
       }
     ],
     'import/no-unresolved': 'off',
