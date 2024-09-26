@@ -5,6 +5,7 @@ import autoprefixer from 'autoprefixer'
 import tailwind from 'tailwindcss'
 import { defineConfig } from 'vite'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
+import { VitePWA } from 'vite-plugin-pwa'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 // https://vitejs.dev/config/
@@ -16,6 +17,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    VitePWA({ registerType: 'autoUpdate' }),
     {
       name: 'configure-response-headers',
       configureServer: (server) => {
