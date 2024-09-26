@@ -4,6 +4,7 @@ import { RouterView } from 'vue-router'
 
 import DeleteCacheButton from './components/shared/DeleteCacheButton.vue'
 
+import AlertsSection from '@/app/components/shared/AlertsSection.vue'
 import ThemeToggle from '@/app/components/shared/ThemeToggle.vue'
 import BasicLayout from '@/app/layouts/BasicLayout.vue'
 
@@ -15,6 +16,9 @@ const layout = shallowRef(BasicLayout)
     <component :is="layout">
       <RouterView @update:layout="layout = $event" />
     </component>
+    <div class="absolute right-3 top-3">
+      <AlertsSection />
+    </div>
     <div class="absolute bottom-3 right-3">
       <ThemeToggle />
     </div>

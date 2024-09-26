@@ -11,7 +11,6 @@ export class InitializeLocalDbService {
   public ormService: SqliteRemoteDatabase
 
   constructor(fileName?: string) {
-    console.log('Hostia me construyeron InitializeLocalDbService')
     this.filename = fileName || DEFAULT_FILE_NAME
     // Creacion/Conexion a la base de datos local
     const { driver, batchDriver, ...db } = new SQLocalDrizzle(this.filename)
