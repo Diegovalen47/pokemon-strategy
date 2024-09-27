@@ -26,7 +26,7 @@ export class AbilityService {
   async setAbilitiesEffect(): Promise<void> {
     try {
       const abilities = await this.abilityLocalRepository.getAllAbilities()
-      const batchSize = 50
+      const batchSize = 200
 
       for (let i = 0; i < abilities.length; i += batchSize) {
         const batch = abilities.slice(i, i + batchSize)

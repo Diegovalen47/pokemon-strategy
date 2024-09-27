@@ -1,3 +1,4 @@
+import type { InsertDamageRelationDto } from '../dtos'
 import type { Relation, TypeLocal } from '../entities'
 
 export interface TypeLocalRepository {
@@ -6,9 +7,7 @@ export interface TypeLocalRepository {
   getTypesCount(): Promise<number>
   getDamageRelationsCount(): Promise<number>
   insertDamageRelation(
-    originTypeId: number,
-    destinyTypeId: number,
-    relation: Relation
+    damageRelationData: InsertDamageRelationDto | InsertDamageRelationDto[]
   ): Promise<void>
   getDamageRelationsForType({
     relation,

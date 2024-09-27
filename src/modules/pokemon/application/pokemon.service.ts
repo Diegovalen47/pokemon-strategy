@@ -1,4 +1,5 @@
 import type { PokemonLocalRepository, PokemonRemoteRepository } from '../domain'
+import type { InsertOriginAbilityDto, InsertOriginTypeDto } from '../domain/dtos'
 
 export class PokemonService {
   constructor(
@@ -23,7 +24,7 @@ export class PokemonService {
     try {
       const pokemonList = await this.pokemonLocalRepository.getAllPokemon()
 
-      const batchSize = 100
+      const batchSize = 200
 
       for (let i = 0; i < pokemonList.length; i += batchSize) {
         const batch = pokemonList.slice(i, i + batchSize)
@@ -32,30 +33,40 @@ export class PokemonService {
           batch.map((pokemon) => this.pokemonRemoteRepository.getPokemonByNameOrId(pokemon.id))
         )
 
+        const updatePokemonSpritePromises: Promise<void>[] = []
+        const insertOriginAbilities: InsertOriginAbilityDto[] = []
+        const insertOriginTypes: InsertOriginTypeDto[] = []
+
         for (const pokemonDetails of pokemonDetailsList) {
-          await this.pokemonLocalRepository.updatePokemonSprite({
-            sprite: pokemonDetails.sprite,
-            id: pokemonDetails.id
-          })
+          updatePokemonSpritePromises.push(
+            this.pokemonLocalRepository.updatePokemonSprite({
+              sprite: pokemonDetails.sprite,
+              id: pokemonDetails.id
+            })
+          )
 
           for (const ability of pokemonDetails.abilities) {
-            const abilityId = ability.id
-            await this.pokemonLocalRepository.insertOriginAbility({
+            insertOriginAbilities.push({
               pokemonId: pokemonDetails.id,
-              abilityId,
+              abilityId: ability.id,
               slot: ability.slot
             })
           }
 
           for (const type of pokemonDetails.types) {
-            const typeId = type.id
-            await this.pokemonLocalRepository.insertOriginType({
+            insertOriginTypes.push({
               pokemonId: pokemonDetails.id,
-              typeId,
+              typeId: type.id,
               slot: type.slot
             })
           }
         }
+
+        await Promise.all(updatePokemonSpritePromises)
+        await Promise.all([
+          this.pokemonLocalRepository.insertOriginAbility(insertOriginAbilities),
+          this.pokemonLocalRepository.insertOriginType(insertOriginTypes)
+        ])
       }
     } catch (error) {
       console.error('Error al actualizar datos extra pokemon', error)

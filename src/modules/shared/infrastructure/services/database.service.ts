@@ -112,7 +112,7 @@ export class DatabaseService {
         slot integer NOT NULL,
         pokemon_id integer NOT NULL,
         ability_id integer NOT NULL,
-        PRIMARY KEY(pokemon_id, ability_id),
+        PRIMARY KEY(pokemon_id, ability_id, slot),
         FOREIGN KEY (pokemon_id) REFERENCES POKEMON(id) ON UPDATE cascade ON DELETE cascade,
         FOREIGN KEY (ability_id) REFERENCES ABILITY(id) ON UPDATE cascade ON DELETE cascade
       )

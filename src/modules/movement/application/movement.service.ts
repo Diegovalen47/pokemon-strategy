@@ -26,7 +26,7 @@ export class MovementService {
   async setMovementsExtraData(): Promise<void> {
     try {
       const movements = await this.movementLocalRepository.getAllMovements()
-      const batchSize = 100
+      const batchSize = 200
 
       for (let i = 0; i < movements.length; i += batchSize) {
         const batch = movements.slice(i, i + batchSize)

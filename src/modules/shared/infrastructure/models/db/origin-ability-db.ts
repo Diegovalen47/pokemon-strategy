@@ -22,7 +22,7 @@ export const originAbility = sqliteTable(
   },
   (table) => {
     return {
-      pk: primaryKey({ columns: [table.pokemonId, table.abilityId] })
+      pk: primaryKey({ columns: [table.pokemonId, table.abilityId, table.slot] })
     }
   }
 )

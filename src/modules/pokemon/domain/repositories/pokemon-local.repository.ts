@@ -1,3 +1,4 @@
+import type { InsertOriginAbilityDto, InsertOriginTypeDto } from '../dtos'
 import { type PokemonLocal } from '../entities/pokemon-local.entity'
 
 export interface PokemonLocalRepository {
@@ -8,22 +9,6 @@ export interface PokemonLocalRepository {
   getOriginAbilitiesCount(): Promise<number>
   getOriginTypesCount(): Promise<number>
   insertPokemon(pokemonData: PokemonLocal | PokemonLocal[]): Promise<void>
-  insertOriginAbility({
-    pokemonId,
-    abilityId,
-    slot
-  }: {
-    pokemonId: number
-    abilityId: number
-    slot: number
-  }): Promise<void>
-  insertOriginType({
-    pokemonId,
-    typeId,
-    slot
-  }: {
-    pokemonId: number
-    typeId: number
-    slot: number
-  }): Promise<void>
+  insertOriginAbility(abilityData: InsertOriginAbilityDto | InsertOriginAbilityDto[]): Promise<void>
+  insertOriginType(typeData: InsertOriginTypeDto | InsertOriginTypeDto[]): Promise<void>
 }

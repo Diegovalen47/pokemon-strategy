@@ -1,4 +1,5 @@
 import type { TypeLocalRepository, TypeRemoteRepository } from '../domain'
+import type { InsertDamageRelationDto } from '../domain/dtos'
 
 export class TypeService {
   constructor(
@@ -27,35 +28,44 @@ export class TypeService {
     try {
       const types = await this.typeLocalRepository.getAllTypes()
 
-      for (const originType of types) {
-        const originTypeDetails = await this.typeRemoteRepository.getTypeByNameOrId(originType.id)
+      const batchSize = 100
 
-        for (const relation of originTypeDetails.damageRelations.doubleDamageTo) {
-          const destinyTypeId = relation.destinyTypeId
-          await this.typeLocalRepository.insertDamageRelation(
-            originType.id,
-            destinyTypeId,
-            'double_damage'
-          )
+      for (let i = 0; i < types.length; i += batchSize) {
+        const batch = types.slice(i, i + batchSize)
+
+        const typesDetailsList = await Promise.all(
+          batch.map((type) => this.typeRemoteRepository.getTypeByNameOrId(type.id))
+        )
+
+        const insertDamageRelations: InsertDamageRelationDto[] = []
+
+        for (const typeDetails of typesDetailsList) {
+          for (const relation of typeDetails.damageRelations.doubleDamageTo) {
+            insertDamageRelations.push({
+              originTypeId: typeDetails.id,
+              destinyTypeId: relation.destinyTypeId,
+              relation: 'double_damage'
+            })
+          }
+
+          for (const relation of typeDetails.damageRelations.halfDamageTo) {
+            insertDamageRelations.push({
+              originTypeId: typeDetails.id,
+              destinyTypeId: relation.destinyTypeId,
+              relation: 'half_damage'
+            })
+          }
+
+          for (const relation of typeDetails.damageRelations.noDamageTo) {
+            insertDamageRelations.push({
+              originTypeId: typeDetails.id,
+              destinyTypeId: relation.destinyTypeId,
+              relation: 'no_damage'
+            })
+          }
         }
 
-        for (const relation of originTypeDetails.damageRelations.halfDamageTo) {
-          const destinyTypeId = relation.destinyTypeId
-          await this.typeLocalRepository.insertDamageRelation(
-            originType.id,
-            destinyTypeId,
-            'half_damage'
-          )
-        }
-
-        for (const relation of originTypeDetails.damageRelations.noDamageTo) {
-          const destinyTypeId = relation.destinyTypeId
-          await this.typeLocalRepository.insertDamageRelation(
-            originType.id,
-            destinyTypeId,
-            'no_damage'
-          )
-        }
+        await this.typeLocalRepository.insertDamageRelation(insertDamageRelations)
       }
 
       return

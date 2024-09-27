@@ -2,6 +2,7 @@ import { count, eq, like } from 'drizzle-orm'
 import { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
 
 import type { PokemonLocal, PokemonLocalRepository } from '../../domain'
+import type { InsertOriginAbilityDto, InsertOriginTypeDto } from '../../domain/dtos'
 
 import { CustomGeneralError } from '@/errors/db'
 import { originAbility, originType, pokemon } from '@/modules/shared/infrastructure/models/db'
@@ -83,34 +84,30 @@ export class PokemonOrmRepository implements PokemonLocalRepository {
     }
   }
 
-  async insertOriginAbility({
-    pokemonId,
-    abilityId,
-    slot
-  }: {
-    pokemonId: number
-    abilityId: number
-    slot: number
-  }): Promise<void> {
+  async insertOriginAbility(
+    abilityData: InsertOriginAbilityDto | InsertOriginAbilityDto[]
+  ): Promise<void> {
     try {
-      await this.orm.insert(originAbility).values({ pokemonId, abilityId, slot })
+      if (Array.isArray(abilityData)) {
+        await this.orm.insert(originAbility).values(abilityData)
+        console.log('OriginAbility insertado')
+        return
+      }
+      await this.orm.insert(originAbility).values(abilityData)
       console.log('OriginAbility insertado')
     } catch (error) {
       console.warn('Error al insertar OriginAbility', error)
     }
   }
 
-  async insertOriginType({
-    pokemonId,
-    typeId,
-    slot
-  }: {
-    pokemonId: number
-    typeId: number
-    slot: number
-  }): Promise<void> {
+  async insertOriginType(typeData: InsertOriginTypeDto | InsertOriginTypeDto[]): Promise<void> {
     try {
-      await this.orm.insert(originType).values({ pokemonId, typeId, slot })
+      if (Array.isArray(typeData)) {
+        await this.orm.insert(originType).values(typeData)
+        console.log('OriginType insertado')
+        return
+      }
+      await this.orm.insert(originType).values(typeData)
       console.log('OriginType insertado')
     } catch (error) {
       console.warn('Error al insertar OriginType', error)

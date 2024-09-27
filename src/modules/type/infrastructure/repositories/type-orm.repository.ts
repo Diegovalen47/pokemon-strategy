@@ -2,6 +2,7 @@ import { eq, and, count } from 'drizzle-orm'
 import type { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
 
 import type { TypeLocal, TypeLocalRepository } from '../../domain'
+import type { InsertDamageRelationDto } from '../../domain/dtos'
 
 import { damageRelation, type, type Relation } from '@/modules/shared/infrastructure/models/db'
 
@@ -51,12 +52,15 @@ export class TypeOrmRepository implements TypeLocalRepository {
   }
 
   async insertDamageRelation(
-    originTypeId: number,
-    destinyTypeId: number,
-    relation: Relation
+    damageRelationData: InsertDamageRelationDto | InsertDamageRelationDto[]
   ): Promise<void> {
     try {
-      await this.orm.insert(damageRelation).values({ originTypeId, destinyTypeId, relation })
+      if (Array.isArray(damageRelationData)) {
+        await this.orm.insert(damageRelation).values(damageRelationData)
+        console.log('DamageRelation insertado')
+        return
+      }
+      await this.orm.insert(damageRelation).values(damageRelationData)
       console.log('DamageRelation insertado')
     } catch (error) {
       console.error('Error al insertar DamageRelation', error)
