@@ -2,13 +2,13 @@ import type { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-import { useDatabaseStore } from './database'
+import { useDatabaseStore } from '../../services/database'
 
 import { AbilityService } from '@/modules/ability/application'
 import { AbilityOrmRepository, AbilityPokeapiRepository } from '@/modules/ability/infrastructure'
 import { pokeApi } from '@/modules/shared/infrastructure'
 
-export const useAbilityStore = defineStore('ability', () => {
+export const useAbilityProviderStore = defineStore('ability-provider', () => {
   const databaseStore = useDatabaseStore()
 
   const abilityServiceInstance = new AbilityService(

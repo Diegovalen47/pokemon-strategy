@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/vue-query'
 
-import { useTypeStore } from '@/app/stores/services'
+import { useTypeProviderStore } from '@/app/stores/modules/type'
 
 export const useDamageRelationsQuery = () => {
-  const typeStore = useTypeStore()
+  const typeProviderStore = useTypeProviderStore()
 
   const {
     isLoading: isLoadingDamageRelations,
@@ -14,10 +14,11 @@ export const useDamageRelationsQuery = () => {
   } = useQuery({
     queryKey: ['syncDamageRelationss'],
     queryFn: async () => {
-      const damageRelationsLocalCount = await typeStore.typeService.getTypesDamageRelationsCount()
+      const damageRelationsLocalCount =
+        await typeProviderStore.typeService.getTypesDamageRelationsCount()
 
       if (damageRelationsLocalCount === 0) {
-        await typeStore.typeService.setTypesDamageRelations()
+        await typeProviderStore.typeService.setTypesDamageRelations()
         console.log('Damage relations obtenidos y cacheados')
         return true
       }

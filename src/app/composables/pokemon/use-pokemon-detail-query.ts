@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/vue-query'
 
-import { usePokemonStore } from '@/app/stores/services'
+import { usePokemonProviderStore } from '@/app/stores/modules/pokemon'
 
 export const usePokemonDetailQuery = () => {
-  const pokemonStore = usePokemonStore()
+  const pokemonProviderStore = usePokemonProviderStore()
 
   const {
     isLoading: isLoadingPokemonDetail,
@@ -14,12 +14,13 @@ export const usePokemonDetailQuery = () => {
   } = useQuery({
     queryKey: ['syncPokemonDetails'],
     queryFn: async () => {
-      const originTypesLocalCount = await pokemonStore.pokemonService.getOriginTypesLocalCount()
+      const originTypesLocalCount =
+        await pokemonProviderStore.pokemonService.getOriginTypesLocalCount()
       const originAbilitiesLocalCount =
-        await pokemonStore.pokemonService.getOriginAbilitiesLocalCount()
+        await pokemonProviderStore.pokemonService.getOriginAbilitiesLocalCount()
 
       if (originTypesLocalCount === 0 || originAbilitiesLocalCount === 0) {
-        await pokemonStore.pokemonService.setPokemonExtraData()
+        await pokemonProviderStore.pokemonService.setPokemonExtraData()
         console.log('Datos extra de pokemon actualizados')
         return true
       }

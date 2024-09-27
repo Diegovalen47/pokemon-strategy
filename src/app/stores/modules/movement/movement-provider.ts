@@ -2,13 +2,13 @@ import type { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-import { useDatabaseStore } from './database'
+import { useDatabaseStore } from '../../services/database'
 
 import { MovementService } from '@/modules/movement/application'
 import { MovementOrmRepository, MovementPokeapiRepository } from '@/modules/movement/infrastructure'
 import { pokeApi } from '@/modules/shared/infrastructure'
 
-export const useMovementStore = defineStore('movement', () => {
+export const useMovementProviderStore = defineStore('movement-provider', () => {
   const databaseStore = useDatabaseStore()
 
   const movementServiceInstance = new MovementService(

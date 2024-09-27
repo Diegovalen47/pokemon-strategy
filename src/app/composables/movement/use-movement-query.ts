@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/vue-query'
 
-import { useMovementStore } from '@/app/stores/services'
+import { useMovementProviderStore } from '@/app/stores/modules/movement'
 
 export const useMovementQuery = () => {
-  const movementStore = useMovementStore()
+  const movementProviderStore = useMovementProviderStore()
 
   const {
     isLoading: isLoadingMovement,
@@ -14,11 +14,12 @@ export const useMovementQuery = () => {
   } = useQuery({
     queryKey: ['syncMovement'],
     queryFn: async () => {
-      const movementCacheCount = await movementStore.movementService.getMovementsLocalCount()
+      const movementCacheCount =
+        await movementProviderStore.movementService.getMovementsLocalCount()
 
       if (movementCacheCount === 0) {
-        await movementStore.movementService.getAllMovementsAndSaveInDb()
-        await movementStore.movementService.setMovementsExtraData()
+        await movementProviderStore.movementService.getAllMovementsAndSaveInDb()
+        await movementProviderStore.movementService.setMovementsExtraData()
         console.log('Movement obtenidos y cacheados')
         return true
       }

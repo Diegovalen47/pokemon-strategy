@@ -10,7 +10,10 @@ export class AbilityService {
     let { next, abilities } = await this.abilityRemoteRepository.getAbilitiesFirstList()
 
     while (next) {
-      await this.abilityLocalRepository.insertAbilities(abilities)
+      const abilityDetails = await Promise.all(
+        abilities.map((ability) => this.abilityRemoteRepository.getAbilityByNameOrId(ability.id))
+      )
+      await this.abilityLocalRepository.insertAbilities(abilityDetails)
       const response = await this.abilityRemoteRepository.getAbilitiesNextList(next)
       next = response.next
       abilities = response.abilities
@@ -21,26 +24,5 @@ export class AbilityService {
 
   async getAbilitiesLocalCount(): Promise<number> {
     return await this.abilityLocalRepository.getAbilitiesCount()
-  }
-
-  async setAbilitiesEffect(): Promise<void> {
-    try {
-      const abilities = await this.abilityLocalRepository.getAllAbilities()
-      const batchSize = 200
-
-      for (let i = 0; i < abilities.length; i += batchSize) {
-        const batch = abilities.slice(i, i + batchSize)
-        const abilityDetails = await Promise.all(
-          batch.map((ability) => this.abilityRemoteRepository.getAbilityByNameOrId(ability.id))
-        )
-        await Promise.all(
-          abilityDetails.map((abilityDetail) =>
-            this.abilityLocalRepository.updateAbility(abilityDetail)
-          )
-        )
-      }
-    } catch (error) {
-      console.error('Error al actualizar efectos de habilidades', error)
-    }
   }
 }

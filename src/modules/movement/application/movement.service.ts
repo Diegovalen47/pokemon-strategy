@@ -10,7 +10,12 @@ export class MovementService {
     let { next, movements } = await this.movementRemoteRepository.getMovementsFirstList()
 
     while (next) {
-      await this.movementLocalRepository.insertMovements(movements)
+      const movementDetails = await Promise.all(
+        movements.map((movement) =>
+          this.movementRemoteRepository.getMovementByNameOrId(movement.id)
+        )
+      )
+      await this.movementLocalRepository.insertMovements(movementDetails)
       const response = await this.movementRemoteRepository.getMovementsNextList(next)
       next = response.next
       movements = response.movements
@@ -21,26 +26,5 @@ export class MovementService {
 
   async getMovementsLocalCount(): Promise<number> {
     return this.movementLocalRepository.getMovementsCount()
-  }
-
-  async setMovementsExtraData(): Promise<void> {
-    try {
-      const movements = await this.movementLocalRepository.getAllMovements()
-      const batchSize = 200
-
-      for (let i = 0; i < movements.length; i += batchSize) {
-        const batch = movements.slice(i, i + batchSize)
-        const movementDetails = await Promise.all(
-          batch.map((movement) => this.movementRemoteRepository.getMovementByNameOrId(movement.id))
-        )
-        await Promise.all(
-          movementDetails.map((movementDetail) =>
-            this.movementLocalRepository.updateMovement(movementDetail)
-          )
-        )
-      }
-    } catch (error) {
-      console.error('Error al actualizar data extra de habilidades', error)
-    }
   }
 }

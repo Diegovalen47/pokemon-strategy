@@ -113,4 +113,14 @@ export class PokemonOrmRepository implements PokemonLocalRepository {
       console.warn('Error al insertar OriginType', error)
     }
   }
+
+  async deleteAllPokemon(): Promise<void> {
+    try {
+      // eslint-disable-next-line drizzle/enforce-delete-with-where
+      await this.orm.delete(pokemon)
+      console.log('Pokemon eliminados')
+    } catch (error) {
+      console.error('Error al eliminar pokemon', error)
+    }
+  }
 }

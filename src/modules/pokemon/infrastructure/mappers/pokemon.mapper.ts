@@ -10,6 +10,7 @@ export class PokemonMapper {
   public static fromDetailJson(json: any): PokemonRemote {
     return new PokemonRemote({
       id: json.id,
+      name: json.name,
       sprite: json.sprites.front_default,
       abilities: json.abilities.map((ability: any) => ({
         id: getIdFromUrl(ability.ability.url),

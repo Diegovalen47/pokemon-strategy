@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/vue-query'
 
-import { useTypeStore } from '@/app/stores/services/type'
+import { useTypeProviderStore } from '@/app/stores/modules/type/type-provider'
 
 export const useTypeQuery = () => {
-  const typeStore = useTypeStore()
+  const typeProviderStore = useTypeProviderStore()
 
   const {
     isLoading: isLoadingType,
@@ -14,10 +14,10 @@ export const useTypeQuery = () => {
   } = useQuery({
     queryKey: ['syncType'],
     queryFn: async () => {
-      const typeCacheCount = await typeStore.typeService.getTypesLocalCount()
+      const typeCacheCount = await typeProviderStore.typeService.getTypesLocalCount()
 
       if (typeCacheCount === 0) {
-        await typeStore.typeService.getAllTypesAndSaveInDb()
+        await typeProviderStore.typeService.getAllTypesAndSaveInDb()
         console.log('Type obtenidos y cacheados')
         return true
       }

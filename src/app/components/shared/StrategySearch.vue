@@ -10,6 +10,9 @@ import { Tabs, TabsContent, TabsList, TabsTriggerCarpet } from '@/app/components
 import { useAbilityQuery } from '@/app/composables/ability'
 import { usePokemonQuery } from '@/app/composables/pokemon'
 import { useTypeQuery } from '@/app/composables/type'
+import { usePokemonStore } from '@/app/stores/modules/pokemon'
+
+const pokemonStore = usePokemonStore()
 
 const { getPokemon, errorPokemon, isLoadingPokemon, isSuccessPokemon } = usePokemonQuery()
 
@@ -19,8 +22,9 @@ const { getAbilities } = useAbilityQuery()
 
 getPokemon()
 
-watch(isSuccessPokemon, (value) => {
+watch(isSuccessPokemon, async (value) => {
   if (value) {
+    await pokemonStore.getAllPokemon()
     getTypes()
     getAbilities()
   }

@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/vue-query'
 
-import { usePokemonStore } from '@/app/stores/services'
+import { usePokemonProviderStore } from '@/app/stores/modules/pokemon'
 
 export const usePokemonQuery = () => {
-  const pokemonStore = usePokemonStore()
+  const pokemonProviderStore = usePokemonProviderStore()
 
   const {
     isLoading: isLoadingPokemon,
@@ -14,10 +14,10 @@ export const usePokemonQuery = () => {
   } = useQuery({
     queryKey: ['syncPokemon'],
     queryFn: async () => {
-      const pokemonCacheCount = await pokemonStore.pokemonService.getPokemonLocalCount()
+      const pokemonCacheCount = await pokemonProviderStore.pokemonService.getPokemonLocalCount()
 
       if (pokemonCacheCount === 0) {
-        await pokemonStore.pokemonService.getAllPokemonAndSaveInDb()
+        await pokemonProviderStore.pokemonService.getAllPokemonAndSaveInDb()
         console.log('Pokemon obtenidos y cacheados')
         return true
       }

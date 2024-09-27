@@ -1,30 +1,20 @@
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
-import { usePokemonStore } from '@/app/stores/services'
+import { usePokemonStore } from '@/app/stores/modules/pokemon'
 import type { PokemonLocal } from '@/modules/pokemon/domain/entities/pokemon-local.entity'
 
 export const usePokemonSearch = () => {
   const pokemonStore = usePokemonStore()
 
-  const pokemonList = ref<PokemonLocal[]>([])
   const query = ref('')
-
-  const searchPokemon = async (name: string) => {
-    query.value = name
-    if (!name || name === '') {
-      pokemonList.value = []
-      return
+  const filteredPokemonList = computed(() => {
+    if (!query.value || query.value === '') {
+      return []
     }
+    return pokemonStore.pokemonList.filter((pokemon: PokemonLocal) =>
+      pokemon.name.toLowerCase().includes(query.value.toLowerCase())
+    )
+  })
 
-    const result = await pokemonStore.pokemonService.searchPokemonByLikeName(name)
-
-    if (result instanceof Error) {
-      pokemonList.value = []
-      return
-    }
-
-    pokemonList.value = result
-  }
-
-  return { query, pokemonList, searchPokemon }
+  return { query, filteredPokemonList }
 }

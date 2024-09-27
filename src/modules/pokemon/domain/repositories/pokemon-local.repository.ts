@@ -11,4 +11,5 @@ export interface PokemonLocalRepository {
   insertPokemon(pokemonData: PokemonLocal | PokemonLocal[]): Promise<void>
   insertOriginAbility(abilityData: InsertOriginAbilityDto | InsertOriginAbilityDto[]): Promise<void>
   insertOriginType(typeData: InsertOriginTypeDto | InsertOriginTypeDto[]): Promise<void>
+  deleteAllPokemon(): Promise<void>
 }

@@ -2,13 +2,13 @@ import type { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-import { useDatabaseStore } from './database'
+import { useDatabaseStore } from '../../services/database'
 
 import { PokemonService } from '@/modules/pokemon/application'
 import { PokemonOrmRepository, PokemonPokeapiRepository } from '@/modules/pokemon/infrastructure'
 import { pokeApi } from '@/modules/shared/infrastructure'
 
-export const usePokemonStore = defineStore('pokemon', () => {
+export const usePokemonProviderStore = defineStore('pokemon-provider', () => {
   const databaseStore = useDatabaseStore()
 
   const pokemonServiceInstance = new PokemonService(

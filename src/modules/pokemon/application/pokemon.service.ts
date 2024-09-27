@@ -1,4 +1,4 @@
-import type { PokemonLocalRepository, PokemonRemoteRepository } from '../domain'
+import type { PokemonLocal, PokemonLocalRepository, PokemonRemoteRepository } from '../domain'
 import type { InsertOriginAbilityDto, InsertOriginTypeDto } from '../domain/dtos'
 
 export class PokemonService {
@@ -24,6 +24,8 @@ export class PokemonService {
     try {
       const pokemonList = await this.pokemonLocalRepository.getAllPokemon()
 
+      await this.deleteAllPokemonLocal()
+
       const batchSize = 200
 
       for (let i = 0; i < pokemonList.length; i += batchSize) {
@@ -33,17 +35,16 @@ export class PokemonService {
           batch.map((pokemon) => this.pokemonRemoteRepository.getPokemonByNameOrId(pokemon.id))
         )
 
-        const updatePokemonSpritePromises: Promise<void>[] = []
+        const insertPokemons: PokemonLocal[] = []
         const insertOriginAbilities: InsertOriginAbilityDto[] = []
         const insertOriginTypes: InsertOriginTypeDto[] = []
 
         for (const pokemonDetails of pokemonDetailsList) {
-          updatePokemonSpritePromises.push(
-            this.pokemonLocalRepository.updatePokemonSprite({
-              sprite: pokemonDetails.sprite,
-              id: pokemonDetails.id
-            })
-          )
+          insertPokemons.push({
+            name: pokemonDetails.name,
+            sprite: pokemonDetails.sprite,
+            id: pokemonDetails.id
+          })
 
           for (const ability of pokemonDetails.abilities) {
             insertOriginAbilities.push({
@@ -62,8 +63,8 @@ export class PokemonService {
           }
         }
 
-        await Promise.all(updatePokemonSpritePromises)
         await Promise.all([
+          this.pokemonLocalRepository.insertPokemon(insertPokemons),
           this.pokemonLocalRepository.insertOriginAbility(insertOriginAbilities),
           this.pokemonLocalRepository.insertOriginType(insertOriginTypes)
         ])
@@ -75,6 +76,14 @@ export class PokemonService {
 
   async getPokemonLocalCount() {
     return await this.pokemonLocalRepository.getPokemonCount()
+  }
+
+  async getAllPokemonLocal() {
+    return await this.pokemonLocalRepository.getAllPokemon()
+  }
+
+  async deleteAllPokemonLocal() {
+    return await this.pokemonLocalRepository.deleteAllPokemon()
   }
 
   async getOriginAbilitiesLocalCount() {

@@ -15,7 +15,7 @@ import { useMovementQuery } from '@/app/composables/movement'
 import { usePokemonDetailQuery, usePokemonSearch } from '@/app/composables/pokemon'
 import { useDamageRelationsQuery, useTypeQuery } from '@/app/composables/type'
 
-const { query, pokemonList, searchPokemon } = usePokemonSearch()
+const { query, filteredPokemonList } = usePokemonSearch()
 
 const { isSuccessType } = useTypeQuery()
 const { isSuccessAbility } = useAbilityQuery()
@@ -23,11 +23,7 @@ const { getPokemonDetails } = usePokemonDetailQuery()
 const { getMovements } = useMovementQuery()
 const { getDamageRelations } = useDamageRelationsQuery()
 
-const onInput = async (query: string) => {
-  await searchPokemon(query)
-}
-
-watch([isSuccessType, isSuccessAbility], ([newIsSuccessType, newIsSuccessAbility]) => {
+watch([isSuccessType, isSuccessAbility], async ([newIsSuccessType, newIsSuccessAbility]) => {
   if (newIsSuccessType && newIsSuccessAbility) {
     getPokemonDetails()
     getMovements()
@@ -41,7 +37,7 @@ watch([isSuccessType, isSuccessAbility], ([newIsSuccessType, newIsSuccessAbility
     <CommandInput
       class="w-full"
       placeholder="Search for a Pokemon"
-      @input="onInput($event.target.value)"
+      @input="query = $event.target.value"
     ></CommandInput>
     <CommandList class="mt-1 w-full">
       <ScrollArea class="h-48 w-full">
@@ -59,7 +55,7 @@ watch([isSuccessType, isSuccessAbility], ([newIsSuccessType, newIsSuccessAbility
         </CommandEmpty>
         <CommandGroup heading="Pokemon">
           <CommandItem
-            v-for="pokemon in pokemonList.slice(0, 50)"
+            v-for="pokemon in filteredPokemonList.slice(0, 50)"
             :key="pokemon.id"
             :value="pokemon.name"
           >
