@@ -9,9 +9,11 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/app/components/ui/tooltip'
-import { useDatabaseStore } from '@/app/stores/services/database'
+import { useDatabaseQuery } from '@/app/composables/services'
+import { useDatabaseProviderStore } from '@/app/stores/services/database'
 
-const databaseStore = useDatabaseStore()
+const databaseStore = useDatabaseProviderStore()
+const { isSuccessTables } = useDatabaseQuery()
 
 const isDeleteLoading = ref(false)
 
@@ -31,7 +33,7 @@ const onClick = async () => {
   <TooltipProvider>
     <Tooltip :delay-duration="200">
       <TooltipTrigger as-child>
-        <Button v-if="databaseStore.isSuccessTables" variant="outline" @click="onClick">
+        <Button v-if="isSuccessTables" variant="outline" @click="onClick">
           <Loader2 v-if="isDeleteLoading" class="size-4 animate-spin" />
           <Paintbrush v-else />
         </Button>

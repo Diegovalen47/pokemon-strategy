@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { watch } from 'vue'
-
 import {
   Command,
   CommandInput,
@@ -10,33 +8,17 @@ import {
   CommandList
 } from '@/app/components/ui/command'
 import { ScrollArea } from '@/app/components/ui/scroll-area'
-import { useAbilityQuery } from '@/app/composables/ability'
-import { useMovementQuery } from '@/app/composables/movement'
-import { usePokemonDetailQuery, usePokemonSearch } from '@/app/composables/pokemon'
-import { useDamageRelationsQuery, useTypeQuery } from '@/app/composables/type'
+import { usePokemonSearch } from '@/app/composables/pokemon'
 
-const { query, filteredPokemonList } = usePokemonSearch()
-
-const { isSuccessType } = useTypeQuery()
-const { isSuccessAbility } = useAbilityQuery()
-const { getPokemonDetails } = usePokemonDetailQuery()
-const { getMovements } = useMovementQuery()
-const { getDamageRelations } = useDamageRelationsQuery()
-
-watch([isSuccessType, isSuccessAbility], async ([newIsSuccessType, newIsSuccessAbility]) => {
-  if (newIsSuccessType && newIsSuccessAbility) {
-    getPokemonDetails()
-    getMovements()
-    getDamageRelations()
-  }
-})
+const { query, filteredPokemonList, selectPokemon } = usePokemonSearch()
 </script>
 
 <template>
   <Command>
     <CommandInput
       class="w-full"
-      placeholder="Search for a Pokemon"
+      placeholder="Buscar un Pokemon"
+      :value="query"
       @input="query = $event.target.value"
     ></CommandInput>
     <CommandList class="mt-1 w-full">
@@ -58,6 +40,7 @@ watch([isSuccessType, isSuccessAbility], async ([newIsSuccessType, newIsSuccessA
             v-for="pokemon in filteredPokemonList.slice(0, 50)"
             :key="pokemon.id"
             :value="pokemon.name"
+            @click="selectPokemon(pokemon)"
           >
             <span class="capitalize">{{ pokemon.name }}</span>
           </CommandItem>

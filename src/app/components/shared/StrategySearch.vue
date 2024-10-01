@@ -1,39 +1,26 @@
 <script setup lang="ts">
 import { Loader2 } from 'lucide-vue-next'
-import { watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 import StrategySearchPokemonInput from './StrategySearchPokemonInput.vue'
 
 import { Button } from '@/app/components/ui/button'
 import { Skeleton } from '@/app/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTriggerCarpet } from '@/app/components/ui/tabs'
-import { useAbilityQuery } from '@/app/composables/ability'
 import { usePokemonQuery } from '@/app/composables/pokemon'
-import { useTypeQuery } from '@/app/composables/type'
-import { usePokemonStore } from '@/app/stores/modules/pokemon'
 
-const pokemonStore = usePokemonStore()
+const router = useRouter()
 
-const { getPokemon, errorPokemon, isLoadingPokemon, isSuccessPokemon } = usePokemonQuery()
+const { getPokemon, errorPokemon, isLoadingPokemon } = usePokemonQuery()
 
-const { getTypes } = useTypeQuery()
-
-const { getAbilities } = useAbilityQuery()
-
-getPokemon()
-
-watch(isSuccessPokemon, async (value) => {
-  if (value) {
-    await pokemonStore.getAllPokemon()
-    getTypes()
-    getAbilities()
-  }
-})
+const goTo = (route: string) => {
+  router.push(route)
+}
 </script>
 
 <template>
   <div class="w-full">
-    <Tabs default-value="pokemon">
+    <Tabs default-value="pokemon" @update:model-value="goTo($event as string)">
       <TabsList class="w-full bg-transparent p-0">
         <TabsTriggerCarpet value="pokemon" class="w-1/2"> Pokemon </TabsTriggerCarpet>
         <TabsTriggerCarpet value="movement" class="w-1/2"> Movement </TabsTriggerCarpet>
