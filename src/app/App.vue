@@ -3,7 +3,7 @@ import { shallowRef } from 'vue'
 import { RouterView } from 'vue-router'
 
 import DeleteCacheButton from './components/shared/DeleteCacheButton.vue'
-import { useGlobalStore } from './stores/global'
+import { useInitialData } from './composables/services'
 
 import AlertsSection from '@/app/components/shared/AlertsSection.vue'
 import ThemeToggle from '@/app/components/shared/ThemeToggle.vue'
@@ -11,8 +11,8 @@ import BasicLayout from '@/app/layouts/BasicLayout.vue'
 
 const layout = shallowRef(BasicLayout)
 
-const globalStore = useGlobalStore()
-globalStore.initializeData()
+const { initializeData } = useInitialData()
+initializeData()
 </script>
 
 <template>
