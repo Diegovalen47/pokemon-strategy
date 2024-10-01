@@ -1,8 +1,8 @@
 <script lang="ts" setup></script>
 
 <template>
-  <header>
-    <nav class="flex flex-row gap-4 p-3">
+  <main class="h-dvh w-screen bg-transparent p-3 pt-0">
+    <div class="absolute left-3 top-3 z-50">
       <RouterLink
         to="/"
         class="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
@@ -23,9 +23,7 @@
           <path d="M19 12H5" />
         </svg>
       </RouterLink>
-    </nav>
-  </header>
-  <main class="h-dvh w-screen p-3 pt-0">
+    </div>
     <slot />
   </main>
 </template>

@@ -31,7 +31,10 @@ watch(areSomeLoading, (value) => {
         <span class="text-xs">Guardando en cache...</span>
       </div>
     </div>
-    <div v-if="isSuccessAll && isAlertVisible">
+    <div
+      v-if="isSuccessAll && isAlertVisible"
+      class="flex h-[40px] w-full items-center justify-center gap-2 rounded-xl"
+    >
       <p class="text-xs text-green-500">Datos guardados en cache</p>
     </div>
   </div>

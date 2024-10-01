@@ -20,13 +20,13 @@ initializeData()
     <component :is="layout">
       <RouterView @update:layout="layout = $event" />
     </component>
-    <div class="absolute right-3 top-3">
+    <div class="absolute right-3 top-3 z-50">
       <AlertsSection />
     </div>
-    <div class="absolute bottom-3 right-3">
+    <div class="absolute bottom-3 right-3 z-50">
       <ThemeToggle />
     </div>
-    <div class="absolute bottom-3 left-3">
+    <div class="absolute bottom-3 left-3 z-50">
       <DeleteCacheButton />
     </div>
   </div>
