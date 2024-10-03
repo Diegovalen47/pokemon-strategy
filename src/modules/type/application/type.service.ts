@@ -1,5 +1,24 @@
-import type { TypeLocalRepository, TypeRemoteRepository } from '../domain'
-import type { InsertDamageRelationDto } from '../domain/dtos'
+import type { Relation, TypeLocal, TypeLocalRepository, TypeRemoteRepository } from '../domain'
+import type {
+  DamageRelations,
+  InsertDamageRelationDto,
+  TypeWithDamageRelations
+} from '../domain/dtos'
+
+const relations: Relation[] = ['double_damage', 'half_damage', 'no_damage']
+const relationsDamageMapping: Record<Relation, number> = {
+  double_damage: 2,
+  half_damage: 0.5,
+  no_damage: 0,
+  normal_damage: 1
+}
+
+const damageRelationsMapping: Record<Relation, string> = {
+  double_damage: 'doubleDamageTo',
+  half_damage: 'halfDamageTo',
+  no_damage: 'noDamageTo',
+  normal_damage: 'normalDamageTo'
+}
 
 export class TypeService {
   constructor(
@@ -74,7 +93,86 @@ export class TypeService {
     }
   }
 
+  async getTypesForPokemon(pokemonId: number): Promise<TypeLocal[]> {
+    return await this.typeLocalRepository.getTypesForPokemon(pokemonId)
+  }
+
+  async getRelationsForTypes(pokemonTypes: TypeLocal[]): Promise<TypeWithDamageRelations[]> {
+    const typesWithRelations = await Promise.all(
+      pokemonTypes.map(async (type) => {
+        const damageRelations: Record<string, any[]> = {
+          doubleDamageTo: [],
+          halfDamageTo: [],
+          noDamageTo: []
+        }
+
+        for (const relation of relations) {
+          const affectedTypes = await this.typeLocalRepository.getDamageRelationsForType({
+            relation,
+            typeId: type.id
+          })
+
+          damageRelations[damageRelationsMapping[relation]] = affectedTypes
+        }
+
+        return {
+          ...type,
+          damageRelations: damageRelations as DamageRelations
+        }
+      })
+    )
+
+    return typesWithRelations
+  }
+
   async getTypesDamageRelationsCount(): Promise<number> {
     return await this.typeLocalRepository.getDamageRelationsCount()
+  }
+
+  async getDamagesReceivedByPokemon(pokemonTypes: TypeLocal[]): Promise<Map<number, TypeLocal[]>> {
+    // key: typeId, value: damageMultiplier Array
+    const damageMultipliersByType: Map<number, number[]> = new Map()
+
+    for (const type of pokemonTypes) {
+      for (const relation of relations) {
+        const typesThatAffectOrigin = await this.typeLocalRepository.getDamageRelationsAgainstType({
+          relation,
+          typeId: type.id
+        })
+
+        for (const affectedType of typesThatAffectOrigin) {
+          if (damageMultipliersByType.has(affectedType.id)) {
+            damageMultipliersByType.get(affectedType.id)?.push(relationsDamageMapping[relation])
+          } else {
+            damageMultipliersByType.set(affectedType.id, [relationsDamageMapping[relation]])
+          }
+        }
+      }
+    }
+
+    const finalDamageByType: Map<number, number> = new Map()
+
+    for (const [typeId, damageMultipliers] of damageMultipliersByType) {
+      const finalDamage = damageMultipliers.reduce((acc, curr) => acc * curr, 1)
+      finalDamageByType.set(typeId, finalDamage)
+    }
+
+    const damagesReceivedByPokemon: Map<number, TypeLocal[]> = new Map()
+
+    for (const [typeId, damageMultiplier] of finalDamageByType) {
+      if (damageMultiplier === 1) {
+        continue
+      }
+
+      const type = await this.typeLocalRepository.getTypeById(typeId)
+
+      if (damagesReceivedByPokemon.has(damageMultiplier)) {
+        damagesReceivedByPokemon.get(damageMultiplier)?.push(type)
+      } else {
+        damagesReceivedByPokemon.set(damageMultiplier, [type])
+      }
+    }
+
+    return damagesReceivedByPokemon
   }
 }

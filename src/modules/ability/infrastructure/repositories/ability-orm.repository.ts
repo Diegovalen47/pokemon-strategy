@@ -3,7 +3,7 @@ import type { SqliteRemoteDatabase } from 'drizzle-orm/sqlite-proxy'
 
 import type { Ability, AbilityLocalRepository } from '../../domain'
 
-import { ability } from '@/modules/shared/infrastructure/models/db'
+import { ability, originAbility } from '@/modules/shared/infrastructure/models/db'
 
 export class AbilityOrmRepository implements AbilityLocalRepository {
   constructor(public orm: SqliteRemoteDatabase) {}
@@ -44,6 +44,20 @@ export class AbilityOrmRepository implements AbilityLocalRepository {
     try {
       const abilities = await this.orm.select().from(ability)
       return abilities
+    } catch (error) {
+      console.error('Error al obtener abilities', error)
+      return []
+    }
+  }
+
+  async getAbilitiesForPokemon(pokemonId: number): Promise<Ability[]> {
+    try {
+      const abilities = await this.orm
+        .select()
+        .from(ability)
+        .innerJoin(originAbility, eq(originAbility.abilityId, ability.id))
+        .where(eq(originAbility.pokemonId, pokemonId))
+      return abilities.map((ability) => ability.ABILITY)
     } catch (error) {
       console.error('Error al obtener abilities', error)
       return []

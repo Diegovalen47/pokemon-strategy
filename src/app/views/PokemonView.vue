@@ -1,13 +1,30 @@
 <script lang="ts" setup>
+import { ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
+
 import { useInitialData } from '../composables/services'
+import { usePokemonLocal } from '../composables/shared'
 
 import { Skeleton } from '@/app/components/ui/skeleton'
 import SearchLayout from '@/app/layouts/SearchLayout.vue'
+
+const { getPokemonFullDetails } = usePokemonLocal()
+
+const router = useRouter()
+const pokemonName = ref('')
+pokemonName.value = router.currentRoute.value.params.name as string
 
 const emit = defineEmits(['update:layout'])
 emit('update:layout', SearchLayout)
 
 const { areSomeLoading, isSuccessAll } = useInitialData()
+
+watch(isSuccessAll, async (value) => {
+  if (value) {
+    const pokemonDetails = await getPokemonFullDetails(pokemonName.value)
+    console.log('pokemonDetails', pokemonDetails)
+  }
+})
 </script>
 
 <template>

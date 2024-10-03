@@ -78,6 +78,10 @@ export class PokemonService {
     return await this.pokemonLocalRepository.getPokemonCount()
   }
 
+  async getPokemonByName(name: string): Promise<PokemonLocal> {
+    return await this.pokemonLocalRepository.getPokemonByName(name)
+  }
+
   async getAllPokemonLocal() {
     return await this.pokemonLocalRepository.getAllPokemon()
   }

@@ -1,4 +1,4 @@
-import type { AbilityLocalRepository, AbilityRemoteRepository } from '../domain'
+import type { Ability, AbilityLocalRepository, AbilityRemoteRepository } from '../domain'
 
 export class AbilityService {
   constructor(
@@ -24,5 +24,9 @@ export class AbilityService {
 
   async getAbilitiesLocalCount(): Promise<number> {
     return await this.abilityLocalRepository.getAbilitiesCount()
+  }
+
+  async getAbilitiesForPokemon(pokemonId: number): Promise<Ability[]> {
+    return await this.abilityLocalRepository.getAbilitiesForPokemon(pokemonId)
   }
 }

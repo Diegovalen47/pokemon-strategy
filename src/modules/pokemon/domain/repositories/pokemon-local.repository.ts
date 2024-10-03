@@ -4,6 +4,7 @@ import { type PokemonLocal } from '../entities/pokemon-local.entity'
 export interface PokemonLocalRepository {
   getPokemonCount(): Promise<number>
   getAllPokemon(): Promise<PokemonLocal[]>
+  getPokemonByName(name: string): Promise<PokemonLocal>
   updatePokemonSprite({ id, sprite }: { id: number; sprite: string }): Promise<void>
   searchPokemonByLikeName(query: string): Promise<PokemonLocal[] | Error>
   getOriginAbilitiesCount(): Promise<number>

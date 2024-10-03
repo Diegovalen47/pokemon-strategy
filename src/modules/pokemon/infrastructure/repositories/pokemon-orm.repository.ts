@@ -29,6 +29,22 @@ export class PokemonOrmRepository implements PokemonLocalRepository {
     }
   }
 
+  async getPokemonByName(name: string): Promise<PokemonLocal> {
+    try {
+      const foundPokemon = await this.orm.select().from(pokemon).where(eq(pokemon.name, name))
+
+      if (foundPokemon.length === 0) {
+        console.error('No se encontro el pokemon')
+        throw new CustomGeneralError('No se encontro el pokemon')
+      }
+
+      return foundPokemon[0]
+    } catch (error) {
+      console.error('Error al obtener pokemon por nombre', error)
+      throw new CustomGeneralError('Error al obtener pokemon')
+    }
+  }
+
   async updatePokemonSprite({ id, sprite }: { id: number; sprite: string }) {
     try {
       await this.orm.update(pokemon).set({ sprite }).where(eq(pokemon.id, id))
