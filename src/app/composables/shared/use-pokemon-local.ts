@@ -1,14 +1,29 @@
+import { useQuery } from '@tanstack/vue-query'
+
 import { useAbilityProviderStore } from '@/app/stores/modules/ability'
 import { usePokemonProviderStore } from '@/app/stores/modules/pokemon'
 import { useTypeProviderStore } from '@/app/stores/modules/type'
 import type { PokemonFullDetails } from '@/modules/shared/infrastructure/models/app'
 
-export const usePokemonLocal = () => {
+export const usePokemonLocal = (name: string) => {
   const pokemonProviderStore = usePokemonProviderStore()
   const abilityProviderStore = useAbilityProviderStore()
   const typeProviderStore = useTypeProviderStore()
 
-  const getPokemonFullDetails = async (name: string): Promise<PokemonFullDetails> => {
+  const {
+    isLoading: isLoadingPokemonFullDetails,
+    isError: isErrorPokemonFullDetails,
+    isSuccess: isSuccessPokemonFullDetails,
+    error: errorPokemonFullDetails,
+    data: pokemonFullDetails,
+    refetch: getPokemonFullDetails
+  } = useQuery({
+    queryKey: ['pokemonFullDetails'],
+    queryFn: async () => getFullDetails(name),
+    enabled: false
+  })
+
+  const getFullDetails = async (name: string): Promise<PokemonFullDetails> => {
     const pokemon = await pokemonProviderStore.pokemonService.getPokemonByName(name)
 
     const pokemonAbilites = await abilityProviderStore.abilityService.getAbilitiesForPokemon(
@@ -29,6 +44,11 @@ export const usePokemonLocal = () => {
   }
 
   return {
+    isLoadingPokemonFullDetails,
+    isErrorPokemonFullDetails,
+    isSuccessPokemonFullDetails,
+    errorPokemonFullDetails,
+    pokemonFullDetails,
     getPokemonFullDetails
   }
 }

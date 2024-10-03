@@ -1,35 +1,43 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { useInitialData } from '../composables/services'
 import { usePokemonLocal } from '../composables/shared'
 
+import { Button } from '@/app/components/ui/button'
 import { Skeleton } from '@/app/components/ui/skeleton'
 import SearchLayout from '@/app/layouts/SearchLayout.vue'
-
-const { getPokemonFullDetails } = usePokemonLocal()
 
 const router = useRouter()
 const pokemonName = ref('')
 pokemonName.value = router.currentRoute.value.params.name as string
+const {
+  getPokemonFullDetails,
+  isLoadingPokemonFullDetails,
+  pokemonFullDetails,
+  errorPokemonFullDetails
+} = usePokemonLocal(pokemonName.value)
 
 const emit = defineEmits(['update:layout'])
 emit('update:layout', SearchLayout)
 
 const { areSomeLoading, isSuccessAll } = useInitialData()
 
-watch(isSuccessAll, async (value) => {
-  if (value) {
-    const pokemonDetails = await getPokemonFullDetails(pokemonName.value)
-    console.log('pokemonDetails', pokemonDetails)
+watchEffect(async () => {
+  if (isSuccessAll.value) {
+    getPokemonFullDetails()
   }
+})
+
+watch(pokemonFullDetails, (value) => {
+  console.log('pokemonFullDetails', value)
 })
 </script>
 
 <template>
   <div
-    v-if="areSomeLoading"
+    v-if="areSomeLoading || isLoadingPokemonFullDetails"
     class="flex size-full flex-col justify-start gap-4 overflow-auto pt-16"
   >
     <div class="flex flex-col items-center justify-center gap-4">
@@ -44,14 +52,26 @@ watch(isSuccessAll, async (value) => {
     </div>
   </div>
   <div
-    v-else-if="isSuccessAll"
+    v-else-if="errorPokemonFullDetails"
     class="flex size-full flex-col justify-start gap-4 overflow-auto pt-16"
   >
     <div class="flex h-min justify-center">
-      <p>Pokemon</p>
+      <p>{{ errorPokemonFullDetails }}</p>
     </div>
     <div class="flex w-full items-center justify-center">
-      <p>Success</p>
+      <Button @click="router.push('/')">Volver al inicio</Button>
+    </div>
+  </div>
+  <div
+    v-else-if="isSuccessAll && pokemonFullDetails"
+    class="flex size-full flex-col justify-start gap-4 overflow-auto pt-16"
+  >
+    <div class="flex h-min justify-center">
+      <p>{{ pokemonFullDetails.name }}</p>
+    </div>
+    <div class="flex w-full items-center justify-center">
+      <p>{{ pokemonFullDetails.id }}</p>
+      <p>{{ pokemonFullDetails.damagesReceived }}</p>
     </div>
   </div>
 </template>
