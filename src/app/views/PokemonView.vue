@@ -5,22 +5,25 @@ import { useRouter } from 'vue-router'
 import { useInitialData } from '../composables/services'
 import { usePokemonLocal } from '../composables/shared'
 
+import PokemonDetail from '@/app/components/pokemon/PokemonDetail.vue'
 import { Button } from '@/app/components/ui/button'
 import { Skeleton } from '@/app/components/ui/skeleton'
 import SearchLayout from '@/app/layouts/SearchLayout.vue'
 
+const emit = defineEmits(['update:layout'])
+emit('update:layout', SearchLayout)
+
 const router = useRouter()
 const pokemonName = ref('')
+
 pokemonName.value = router.currentRoute.value.params.name as string
+
 const {
   getPokemonFullDetails,
   isLoadingPokemonFullDetails,
   pokemonFullDetails,
   errorPokemonFullDetails
 } = usePokemonLocal(pokemonName.value)
-
-const emit = defineEmits(['update:layout'])
-emit('update:layout', SearchLayout)
 
 const { areSomeLoading, isSuccessAll } = useInitialData()
 
@@ -62,16 +65,8 @@ watch(pokemonFullDetails, (value) => {
       <Button @click="router.push('/')">Volver al inicio</Button>
     </div>
   </div>
-  <div
+  <PokemonDetail
     v-else-if="isSuccessAll && pokemonFullDetails"
-    class="flex size-full flex-col justify-start gap-4 overflow-auto pt-16"
-  >
-    <div class="flex h-min justify-center">
-      <p>{{ pokemonFullDetails.name }}</p>
-    </div>
-    <div class="flex w-full items-center justify-center">
-      <p>{{ pokemonFullDetails.id }}</p>
-      <p>{{ pokemonFullDetails.damagesReceived }}</p>
-    </div>
-  </div>
+    :pokemon-full-details="pokemonFullDetails"
+  />
 </template>
