@@ -2,6 +2,7 @@
 import PokemonDetailAbilitiesList from './PokemonDetailAbilitiesList.vue'
 import PokemonDetailStrategySection from './PokemonDetailStrategySection.vue'
 
+import TypeBadge from '@/app/components/shared/TypeBadge.vue'
 import type { PokemonFullDetails } from '@/modules/shared/infrastructure/models/app'
 
 defineProps<{
@@ -20,6 +21,9 @@ defineProps<{
         class="h-44"
       />
       <p v-else>No sprite</p>
+      <div class="flex flex-wrap gap-2 py-2">
+        <TypeBadge v-for="type in pokemonFullDetails.types" :key="type.id" :type="type" />
+      </div>
       <PokemonDetailAbilitiesList :pokemon-abilities="pokemonFullDetails.abilities" />
     </div>
     <PokemonDetailStrategySection :damages-received="pokemonFullDetails.damagesReceived" />
