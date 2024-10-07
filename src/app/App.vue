@@ -26,8 +26,14 @@ initializeData()
     <div class="absolute bottom-3 right-3 z-50">
       <ThemeToggle />
     </div>
-    <div class="absolute bottom-3 left-3 z-50">
+    <div v-if="false" class="absolute bottom-3 left-3 z-50">
       <DeleteCacheButton />
+    </div>
+    <div class="absolute bottom-3 left-1/2 w-1/2 -translate-x-1/2 text-[10px] leading-none">
+      <p>
+        Esta es una app solo para uso de la comunidad. Las imágenes, nombres, formas y otra
+        información relevante de Pokémon son propiedad de The Pokémon Company.
+      </p>
     </div>
   </div>
 </template>
