@@ -11,8 +11,8 @@ defineProps<{
 </script>
 
 <template>
-  <div class="flex size-full flex-col justify-start gap-4 overflow-auto pt-16">
-    <div class="flex flex-col items-center justify-center gap-4 capitalize">
+  <div class="flex size-full flex-col justify-start gap-4 overflow-auto pt-16 md:flex-row">
+    <div class="flex flex-col items-center justify-center gap-4 capitalize md:w-1/2">
       <h4 class="text-2xl font-bold">{{ pokemonFullDetails.name }}</h4>
       <img
         v-if="pokemonFullDetails.sprite"
@@ -26,6 +26,8 @@ defineProps<{
       </div>
       <PokemonDetailAbilitiesList :pokemon-abilities="pokemonFullDetails.abilities" />
     </div>
-    <PokemonDetailStrategySection :damages-received="pokemonFullDetails.damagesReceived" />
+    <div class="mb-20 flex flex-col justify-center md:w-1/2">
+      <PokemonDetailStrategySection :damages-received="pokemonFullDetails.damagesReceived" />
+    </div>
   </div>
 </template>

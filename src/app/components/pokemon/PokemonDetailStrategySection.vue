@@ -22,13 +22,11 @@ const damagesReceivedList = computed(() => {
 </script>
 
 <template>
-  <div class="mb-20 flex flex-col justify-center">
-    <h6 class="text-center text-base font-bold">Strategy</h6>
-    <div v-for="damage in damagesReceivedList" :key="damage.damageMultiplier">
-      <p>x{{ damage.damageMultiplier }}</p>
-      <div class="flex flex-wrap gap-2 py-2">
-        <TypeBadge v-for="type in damage.types" :key="type.id" :type="type" />
-      </div>
+  <h6 class="text-center text-base font-bold">Strategy</h6>
+  <div v-for="damage in damagesReceivedList" :key="damage.damageMultiplier">
+    <p>x{{ damage.damageMultiplier }}</p>
+    <div class="flex flex-wrap gap-2 py-2">
+      <TypeBadge v-for="type in damage.types" :key="type.id" :type="type" />
     </div>
   </div>
 </template>

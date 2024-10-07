@@ -41,13 +41,13 @@ watch(pokemonFullDetails, (value) => {
 <template>
   <div
     v-if="areSomeLoading || isLoadingPokemonFullDetails"
-    class="flex size-full flex-col justify-start gap-4 overflow-auto pt-16"
+    class="flex size-full flex-col justify-start gap-4 overflow-auto pt-16 md:flex-row"
   >
-    <div class="flex flex-col items-center justify-center gap-4">
-      <Skeleton class="h-60 w-44" />
-      <Skeleton class="h-20 w-full" />
+    <div class="flex flex-col items-center justify-center gap-4 md:w-1/2">
+      <Skeleton class="h-64 w-44" />
+      <Skeleton class="h-28 w-full" />
     </div>
-    <div class="flex flex-col items-center justify-center gap-4">
+    <div class="flex flex-col items-center justify-center gap-4 md:w-1/2">
       <Skeleton class="h-10 w-full" />
       <Skeleton class="h-10 w-full" />
       <Skeleton class="h-32 w-full" />
